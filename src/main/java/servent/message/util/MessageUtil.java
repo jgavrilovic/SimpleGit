@@ -94,7 +94,7 @@ public class MessageUtil {
 	public static void sendDeliveredMessage(Message message){
 		PongMessage pongMessage = new PongMessage(AppConfig.myServentInfo.getListenerPort(),
 				message.getSenderPort(),
-				PongType.DELIVERED, message.getMessageId());
+				PongType.DELIVERED, message.getMessageId(), AppConfig.myServentInfo.getChordId(), message.getOriginalSenderID());
 
 		sendMessage(pongMessage);
 	}

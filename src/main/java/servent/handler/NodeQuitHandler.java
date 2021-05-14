@@ -51,7 +51,7 @@ public class NodeQuitHandler implements MessageHandler {
                     if(flag){
                         AppConfig.timestampedErrorPrint("Saljem dalje: " + AppConfig.chordState.getNextNodePort());
                         Message nextUpdate = new NodeQuitMessage(AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getNextNodePort(),
-                                clientMessage.getMessageText(),null,AppConfig.myServentInfo.getChordId(), clientMessage.get
+                                clientMessage.getMessageText(),null,clientMessage.getOriginalSenderID(), clientMessage.getOriginalReciverID()
                                 );
                         MessageUtil.sendMessage(nextUpdate);
                         flag=false;

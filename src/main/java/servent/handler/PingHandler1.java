@@ -33,7 +33,7 @@ public class PingHandler1 implements MessageHandler {
 
                             PongMessage pongMessage = new PongMessage(AppConfig.myServentInfo.getListenerPort(),
                                     AppConfig.chordState.getNextNodeForKey(message.getOriginalSenderID()).getListenerPort(),
-                                    PongType.PONG, message.getMessageId());
+                                    PongType.PONG, message.getMessageId(), AppConfig.myServentInfo.getChordId(), message.getOriginalSenderID());
 
                             MessageUtil.sendMessage(pongMessage);
                         }
