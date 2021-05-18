@@ -23,11 +23,16 @@ public class PingCommand implements CLICommand {
     }
 
 
-
+    int key=0;
     @Override
     public void execute(String args) {
         try {
-            int key = Integer.parseInt(args);
+            if(args==null){
+                AppConfig.timestampedErrorPrint("Unesi cvor nako target");
+            }else{
+                key = Integer.parseInt(args);
+            }
+
 
             PingMessage pingMessage = new PingMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(), AppConfig.myServentInfo.getChordId(), key, PingType.PING);
             MessageUtil.sendMessage(pingMessage);

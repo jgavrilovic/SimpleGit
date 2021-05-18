@@ -10,8 +10,8 @@ public class NodeQuitMessage extends BasicMessage {
     private static final long serialVersionUID = -2457521687571225150L;
 
 
-    public NodeQuitMessage(int senderPort, int receiverPort, String text, Map<Integer, Integer> valueMap,int originalSenderID,int originalReciverID) {
-        super(MessageType.QUIT, senderPort, receiverPort, text, valueMap,originalSenderID,originalReciverID);
+    public NodeQuitMessage(int senderPort, int receiverPort, String text, Map<Integer, Integer> valueMap) {
+        super(MessageType.QUIT, senderPort, receiverPort, text, valueMap);
 
     }
 

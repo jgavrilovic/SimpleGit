@@ -52,50 +52,50 @@ public class SimpleServentListener implements Runnable, Cancellable {
 				
 				MessageHandler messageHandler = new NullHandler(clientMessage);
 				
-				/*
-				 * Each message type has it's own handler.
-				 * If we can get away with stateless handlers, we will,
-				 * because that way is much simpler and less error prone.
-				 */
+
 				switch (clientMessage.getMessageType()) {
-				case NEW_NODE:
-					messageHandler = new NewNodeHandler(clientMessage);
-					break;
-				case WELCOME:
-					messageHandler = new WelcomeHandler(clientMessage);
-					break;
-				case SORRY:
-					messageHandler = new SorryHandler(clientMessage);
-					break;
-				case UPDATE:
-					messageHandler = new UpdateHandler(clientMessage);
-					break;
-				case QUIT:
-					messageHandler = new NodeQuitHandler(clientMessage);
-					break;
-				/*case PING:
-					messageHandler = new PingHandler(clientMessage);
-					break;
-				case PONG:
-					messageHandler = new PongHandler(clientMessage);
-					break;*/
-				case PING:
-					messageHandler = new PingHandler1(clientMessage);
-					break;
-				case PONG:
-					messageHandler = new PongHandler1(clientMessage);
-					break;
-				case PUT:
-					messageHandler = new PutHandler(clientMessage);
-					break;
-				case ASK_GET:
-					messageHandler = new AskGetHandler(clientMessage);
-					break;
-				case TELL_GET:
-					messageHandler = new TellGetHandler(clientMessage);
-					break;
-				case POISON:
-					break;
+					case NEW_NODE:
+						messageHandler = new NewNodeHandler(clientMessage);
+						break;
+					case WELCOME:
+						messageHandler = new WelcomeHandler(clientMessage);
+						break;
+					case SORRY:
+						messageHandler = new SorryHandler(clientMessage);
+						break;
+					case UPDATE:
+						messageHandler = new UpdateHandler(clientMessage);
+						break;
+					case QUIT:
+						messageHandler = new NodeQuitHandler(clientMessage);
+						break;
+				//HANDLER ZA CRUD OPERACIJE
+					case ADD_GITFILE:
+						messageHandler = new AddHandler(clientMessage);
+						break;
+					case ASK_PULL:
+						messageHandler = new AskPullHandler(clientMessage);
+						break;
+					case TELL_PULL:
+						messageHandler = new TellPullHandler(clientMessage);
+						break;
+				//---------------------------
+					case PING:
+						messageHandler = new PingHandler1(clientMessage);
+						break;
+					case PONG:
+						messageHandler = new PongHandler1(clientMessage);
+						break;
+					case PUT:
+						messageHandler = new PutHandler(clientMessage);
+						break;
+					case ASK_GET:
+						messageHandler = new AskGetHandler(clientMessage);
+						break;
+					case TELL_GET:
+						messageHandler = new TellGetHandler(clientMessage);
+						break;
+
 				}
 				
 				threadPool.submit(messageHandler);

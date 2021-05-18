@@ -26,7 +26,7 @@ public class AppConfig {
 		System.err.println(timeFormat.format(now) + " - " + message);
 	}
 	
-	public static boolean INITIALIZED = false;
+
 	public static int BOOTSTRAP_PORT;
 	public static int SERVENT_COUNT;
 	
@@ -55,10 +55,9 @@ public class AppConfig {
 			timestampedErrorPrint("Problem reading servent_count. Exiting...");
 			System.exit(0);
 		}
-		
+
 		try {
 			int chordSize = Integer.parseInt(properties.getProperty("chord_size"));
-			
 			ChordState.CHORD_SIZE = chordSize;
 			chordState = new ChordState();
 			
@@ -77,8 +76,47 @@ public class AppConfig {
 			timestampedErrorPrint("Problem reading " + portProperty + ". Exiting...");
 			System.exit(0);
 		}
+
+		String rootPath=null;
+		String storagePath=null;
+		try {
+			rootPath = properties.getProperty("localRoot"+serventId);
+			storagePath = properties.getProperty("localStorage"+serventId);
+		} catch (NumberFormatException e) {
+			timestampedErrorPrint("Problem reading root or storage path. Exiting...");
+			System.exit(0);
+		}
+
+
+		int weakLimit=-1;
+		int strongLimit=-1;
+		try {
+			weakLimit = Integer.parseInt(properties.getProperty("weak_failure_limit"));
+			strongLimit = Integer.parseInt(properties.getProperty("strong_failure_limit"));
+		} catch (NumberFormatException e) {
+			timestampedErrorPrint("Problem reading week or strong limit. Exiting...");
+			System.exit(0);
+		}
+
+
+		String teamName = null;
+		try {
+			teamName = properties.getProperty("serventTeam"+serventId);
+		} catch (NumberFormatException e) {
+			timestampedErrorPrint("Problem reading team name. Exiting...");
+			System.exit(0);
+		}
+
+		int teamLimit = -1;
+		try {
+			teamLimit = Integer.parseInt(properties.getProperty("teamLimit"));
+		} catch (NumberFormatException e) {
+			timestampedErrorPrint("Problem reading team limit. Exiting...");
+			System.exit(0);
+		}
+
 		
-		myServentInfo = new ServentInfo("localhost", serventPort);
+		myServentInfo = new ServentInfo("localhost", serventPort, rootPath, storagePath, weakLimit, strongLimit, teamName, teamLimit);
 	}
 	
 }

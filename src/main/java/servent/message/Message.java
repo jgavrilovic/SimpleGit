@@ -61,7 +61,5 @@ public interface Message extends Serializable {
 
 	Map<Integer, Integer> getValueMap();
 
-	int getOriginalSenderID();
 
-	int getOriginalReciverID();
 }

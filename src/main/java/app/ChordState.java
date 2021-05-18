@@ -356,7 +356,7 @@ public class ChordState {
 			valueMap.put(key, value);
 		} else {
 			ServentInfo nextNode = getNextNodeForKey(key);
-			PutMessage pm = new PutMessage(AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), key, value, AppConfig.myServentInfo.getChordId(), key);
+			PutMessage pm = new PutMessage(AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), key, value);
 			MessageUtil.sendMessage(pm);
 		}
 	}
@@ -379,7 +379,7 @@ public class ChordState {
 		}
 		
 		ServentInfo nextNode = getNextNodeForKey(key);
-		AskGetMessage agm = new AskGetMessage(AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), String.valueOf(key),AppConfig.myServentInfo.getChordId(),key);
+		AskGetMessage agm = new AskGetMessage(AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), String.valueOf(key));
 		MessageUtil.sendMessage(agm);
 		
 		return -2;

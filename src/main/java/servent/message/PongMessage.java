@@ -7,8 +7,10 @@ public class PongMessage extends BasicMessage {
     private PongType pongType;
     private int previousMessageID;
 
-    public PongMessage(int senderPort, int receiverPort, PongType type, int previousMessageID,int originalSenderID,int originalReciverID) {
-        super(MessageType.PONG, senderPort, receiverPort,originalSenderID,originalReciverID);
+
+
+    public PongMessage(int senderPort, int receiverPort, PongType type, int previousMessageID) {
+        super(MessageType.PONG, senderPort, receiverPort);
         this.pongType = type;
         this.previousMessageID = previousMessageID;
     }

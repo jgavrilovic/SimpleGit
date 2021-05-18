@@ -6,9 +6,15 @@ public class PingMessage  extends BasicMessage {
 
     private PingType pingType;
 
+
+    private int originalSenderID;
+    private int originalReciverID;
+
     public PingMessage(int senderPort, int receiverPort, int originalSenderID, int originalReciverID, PingType type) {
-        super(MessageType.PING, senderPort, receiverPort, originalSenderID, originalReciverID);
+        super(MessageType.PING, senderPort, receiverPort);
         this.pingType = type;
+        this.originalSenderID=originalSenderID;
+        this.originalReciverID=originalReciverID;
     }
 
     public PingType getPingType() {
@@ -17,6 +23,14 @@ public class PingMessage  extends BasicMessage {
 
     public void setPingType(PingType pingType) {
         this.pingType = pingType;
+    }
+
+    public int getOriginalSenderID() {
+        return originalSenderID;
+    }
+
+    public int getOriginalReciverID() {
+        return originalReciverID;
     }
 
 

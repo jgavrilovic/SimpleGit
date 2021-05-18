@@ -29,8 +29,7 @@ public class NodeQuitCommand implements CLICommand {
             //port - id - port(mog prethodnika)
             String msg = AppConfig.myServentInfo.getListenerPort() + " " + AppConfig.myServentInfo.getChordId() +" " + AppConfig.chordState.getPredecessor().getListenerPort();
 
-            Message nqtMsg = new NodeQuitMessage(AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getNextNodePort(), msg, AppConfig.chordState.getValueMap(),
-                    AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodePort());
+            Message nqtMsg = new NodeQuitMessage(AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getNextNodePort(), msg, AppConfig.chordState.getValueMap());
             MessageUtil.sendMessage(nqtMsg);
             NodeQuitHandler.receivedQuit.add(nqtMsg);
         } catch (NumberFormatException e) {

@@ -48,7 +48,7 @@ public class DelayedMessageSender implements Runnable {
 			oos.flush();
 			
 			sendSocket.close();
-
+/*
 			if (messageToSend.getMessageType() != MessageType.PONG){
 				Thread thread = new Thread(new TimeoutCounter(messageToSend));
 				thread.start();
@@ -58,8 +58,9 @@ public class DelayedMessageSender implements Runnable {
 					Thread thread = new Thread(new TimeoutCounter(messageToSend));
 					thread.start();
 				}
-			}
+			}*/
 		} catch (IOException e) {
+			e.printStackTrace();
 			AppConfig.timestampedErrorPrint("Couldn't send message: " + messageToSend.toString());
 		}
 	}

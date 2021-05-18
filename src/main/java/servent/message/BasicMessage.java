@@ -25,11 +25,6 @@ public class BasicMessage implements Message {
 	private final int receiverPort;
 	private final String messageText;
 
-
-
-
-	private final int originalSenderID;
-	private final int originalReciverID;
 	
 	//This gives us a unique id - incremented in every natural constructor.
 	private static AtomicInteger messageCounter = new AtomicInteger(0);
@@ -38,40 +33,34 @@ public class BasicMessage implements Message {
 
 	private final Map<Integer, Integer> valueMap;
 	
-	public BasicMessage(MessageType type, int senderPort, int receiverPort ,int originalSenderID,int originalReciverID) {
+	public BasicMessage(MessageType type, int senderPort, int receiverPort) {
 		this.type = type;
 		this.senderPort = senderPort;
 		this.receiverPort = receiverPort;
 		this.messageText = "";
 		this.valueMap=new HashMap<>();
-		this.originalSenderID=originalSenderID;
-		this.originalReciverID=originalReciverID;
 		
 		this.messageId = messageCounter.getAndIncrement();
 
 	}
 
-	public BasicMessage(MessageType type, int senderPort, int receiverPort, String messageText,int originalSenderID,int originalReciverID) {
+	public BasicMessage(MessageType type, int senderPort, int receiverPort, String messageText) {
 		this.type = type;
 		this.senderPort = senderPort;
 		this.receiverPort = receiverPort;
 		this.messageText = messageText;
 		this.valueMap=new HashMap<>();
-		this.originalSenderID=originalSenderID;
-		this.originalReciverID=originalReciverID;
 
 
 		this.messageId = messageCounter.getAndIncrement();
 	}
 	
-	public BasicMessage(MessageType type, int senderPort, int receiverPort, String messageText, Map<Integer, Integer> valueMap,int originalSenderID,int originalReciverID) {
+	public BasicMessage(MessageType type, int senderPort, int receiverPort, String messageText, Map<Integer, Integer> valueMap) {
 		this.type = type;
 		this.senderPort = senderPort;
 		this.receiverPort = receiverPort;
 		this.messageText = messageText;
 		this.valueMap=valueMap;
-		this.originalSenderID=originalSenderID;
-		this.originalReciverID=originalReciverID;
 
 
 		this.messageId = messageCounter.getAndIncrement();
@@ -161,12 +150,4 @@ public class BasicMessage implements Message {
 		this.delivered = true;
 	}
 
-	@Override
-	public int getOriginalSenderID() {
-		return originalSenderID;
-	}
-	@Override
-	public int getOriginalReciverID() {
-		return originalReciverID;
-	}
 }
