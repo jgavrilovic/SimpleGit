@@ -26,7 +26,10 @@ public class AddHandler implements MessageHandler {
     public AddHandler(Message clientMessage) {
         this.clientMessage = clientMessage;
     }
-
+    /**TODO
+     *  adsadasd
+     *
+     * */
     @Override
     public void run() {
         if (clientMessage.getMessageType() == MessageType.ADD_GITFILE) {
@@ -37,13 +40,9 @@ public class AddHandler implements MessageHandler {
                 File f=null;
                 try {
                      f = ((AddMessage)clientMessage).getFile();
-//                     String pathABS = f.getAbsolutePath();
-//                     boolean isItRenamed = f.renameTo(new File(pathABS.substring(0,pathABS.length()-4)+"0.txt"));
-//                     AppConfig.timestampedStandardPrint("Rename uradjen:  " + isItRenamed);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-//                File newf = f;
                 AppConfig.timestampedErrorPrint(f.getName());
                 try {
                     File finalF = f;

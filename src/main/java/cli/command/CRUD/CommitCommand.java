@@ -3,6 +3,9 @@ package cli.command.CRUD;
 import app.AppConfig;
 import cli.command.CLICommand;
 import file.DHTFiles;
+import file.GitFile;
+import file.GitKey;
+import file.LocalRoot;
 import servent.message.AddMessage;
 import servent.message.AskPullMessage;
 import servent.message.Message;
@@ -15,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.Map;
 
 public class CommitCommand implements CLICommand {
 
@@ -35,50 +39,28 @@ public class CommitCommand implements CLICommand {
 
     @Override
     public void execute(String args) {
+
+        String fullPath = AppConfig.myServentInfo.getRootPath()+"/"+args;
+
+
+
         if(args.contains(".txt")){
-
+            File myFile = new File(fullPath);
+            for (Map.Entry<GitKey,List<GitFile>> gitFile: LocalRoot.workingRoot.entrySet()) {
+                if (gitFile.getKey().getRandNumber()==AppConfig.myServentInfo.getChordId()){
+                    gitFile.getValue().stream().filter(x-> x.getName().equals(args)).forEach(f->{
+                        if(f.getFile().lastModified()!=myFile.lastModified()){
+                            //povecaj verziju i commituj
+                        }else{
+                            //commituj sa istom verzijom
+                        }
+                    });
+                }
+            }
         }else{
 
         }
     }
 
 
-
-    private List<File> sendFile(String fullPath, int key, boolean flag){
-        AppConfig.timestampedErrorPrint(fullPath);
-        if(fullPath.contains(".txt")){
-            List<File> listOfFiles = new ArrayList<>();
-            File f = new File(fullPath);
-            if(flag){
-                AddMessage addMsg = new AddMessage(
-                        AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
-                        f,key);
-                MessageUtil.sendMessage(addMsg);
-            }
-            listOfFiles.add(f);
-            return listOfFiles;
-        }else{
-            try {
-                List<File> listOfFiles = new ArrayList<>();
-                Files.walk(Paths.get(fullPath))
-                        .filter(Files::isRegularFile)
-                        .forEach(a->{
-                            File f = new File(a.toFile().getAbsolutePath());
-                            if(flag) {
-                                AddMessage addMsg = new AddMessage(
-                                        AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
-                                        f, key);
-                                MessageUtil.sendMessage(addMsg);
-                            }
-                            listOfFiles.add(f);
-                        });
-                return listOfFiles;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        AppConfig.timestampedStandardPrint("Komanda izvrsena");
-        return null;
-    }
 }
