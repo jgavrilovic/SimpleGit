@@ -4,6 +4,7 @@ import app.AppConfig;
 import app.Cancellable;
 import cli.command.*;
 import cli.command.CRUD.AddCommand;
+import cli.command.CRUD.CommitCommand;
 import cli.command.CRUD.PullCommand;
 import servent.SimpleServentListener;
 
@@ -32,6 +33,7 @@ public class CLIParser implements Runnable, Cancellable {
 		commandList.add(new PingCommand());
 		commandList.add(new AddCommand());
 		commandList.add(new PullCommand());
+		commandList.add(new CommitCommand());
 	}
 	
 	@Override

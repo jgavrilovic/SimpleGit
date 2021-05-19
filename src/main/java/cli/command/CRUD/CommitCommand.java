@@ -2,10 +2,8 @@ package cli.command.CRUD;
 
 import app.AppConfig;
 import cli.command.CLICommand;
-import file.DHTFiles;
-import file.GitFile;
-import file.GitKey;
-import file.LocalRoot;
+import file.*;
+import servent.handler.TellPullHandler;
 import servent.message.AddMessage;
 import servent.message.AskPullMessage;
 import servent.message.Message;
@@ -39,28 +37,62 @@ public class CommitCommand implements CLICommand {
 
     @Override
     public void execute(String args) {
+        String fullPath;
+        if(args!=null){
+            fullPath = AppConfig.myServentInfo.getRootPath()+"/"+args;
+        }else{
+            fullPath = AppConfig.myServentInfo.getRootPath();
+        }
 
-        String fullPath = AppConfig.myServentInfo.getRootPath()+"/"+args;
 
 
 
-        if(args.contains(".txt")){
+        if(fullPath.contains(".txt")){
+            AppConfig.timestampedStandardPrint("komituje se file " + fullPath);
             File myFile = new File(fullPath);
             for (Map.Entry<GitKey,List<GitFile>> gitFile: LocalRoot.workingRoot.entrySet()) {
-                if (gitFile.getKey().getRandNumber()==AppConfig.myServentInfo.getChordId()){
-                    gitFile.getValue().stream().filter(x-> x.getName().equals(args)).forEach(f->{
-                        if(f.getFile().lastModified()!=myFile.lastModified()){
-                            //povecaj verziju i commituj
-                        }else{
-                            //commituj sa istom verzijom
+                    gitFile.getValue().stream().filter(x -> x.getFile().getPath().contains(args)).forEach(f -> {
+                        if (TellPullHandler.lastModifiedTimeFiles.get(myFile) != myFile.lastModified()) {
+                            System.out.println(f.getFile().lastModified() + " 1 " + myFile.lastModified());
+                        } else {
+                            System.out.println(f.getFile().lastModified() + " 2 " + myFile.lastModified());
                         }
                     });
-                }
+
             }
         }else{
+            AppConfig.timestampedStandardPrint("komituje se dir: " + fullPath);
 
+            try {
+                Files.walk(Paths.get(fullPath))
+                        .filter(Files::isRegularFile)
+                        .forEach(a->{
+                            File myFile = new File(a.toFile().getPath());
+                            for (Map.Entry<GitKey,List<GitFile>> gitFile: LocalRoot.workingRoot.entrySet()) {
+                                    gitFile.getValue().stream().filter(x -> x.getFile().getPath().contains(args)).forEach(f -> {
+                                        if (TellPullHandler.lastModifiedTimeFiles.get(myFile) != myFile.lastModified()) {
+                                            System.out.println(f.getFile().lastModified() + " 1 " + myFile.lastModified());
+                                        } else {
+                                            System.out.println(f.getFile().lastModified() + " 2 " + myFile.lastModified());
+                                        }
+                                    });
+                            }
+                        });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
 }
+
+//LocalRoot: {GitKey(randNumber=48)=
+// [GitFile(name=tri00.txt, file=src\main\resources\servent0\localRoot\tri0.txt, version=0),
+// GitFile(name=dva00.txt, file=src\main\resources\servent0\localRoot\dir1\dva0.txt, version=0),
+// GitFile(name=jedan00.txt, file=src\main\resources\servent0\localRoot\dir1\jedan0.txt, version=0)]}
+
+//16:48:52 - LastModified: {
+// src\main\resources\servent0\localRoot\dir1\jedan000.txt=1621435571736,
+// src\main\resources\servent0\localRoot\dir1\dva000.txt=1621435570869,
+// src\main\resources\servent0\localRoot\tri000.txt=1621435542988}

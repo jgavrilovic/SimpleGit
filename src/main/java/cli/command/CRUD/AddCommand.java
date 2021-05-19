@@ -1,19 +1,21 @@
 package cli.command.CRUD;
 
 import app.AppConfig;
-import app.ServentInfo;
 import cli.command.CLICommand;
-import file.*;
+import file.DHTFiles;
+import file.GitFile;
+import file.GitKey;
+import file.LocalRoot;
 import servent.message.AddMessage;
 import servent.message.util.MessageUtil;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AddCommand implements CLICommand {
 
@@ -34,75 +36,74 @@ public class AddCommand implements CLICommand {
 
     @Override
     public void execute(String args) {
-
-        int rand = (int) (Math.random() * AppConfig.chordState.getAllNodeInfo().size());//0,1
-        int key;
+        int rand = (int) (Math.random() * AppConfig.chordState.getAllNodeInfo().size());
         String fullPath=AppConfig.myServentInfo.getRootPath()+"/"+args;
+        ArrayList<GitFile> listaGitFileova = new ArrayList<>();
+        int destination = AppConfig.chordState.getAllNodeInfo().get(rand).getChordId();
 
-
-        AppConfig.timestampedErrorPrint(rand+"");
-        List<GitFile> listaGitFileova = new ArrayList<>();
-        if(AppConfig.chordState.getAllNodeInfo().get(rand).getChordId()!=AppConfig.myServentInfo.getChordId()){
-            key = AppConfig.chordState.getAllNodeInfo().get(rand).getChordId();
-            List<File>  list = sendFile(fullPath,key,true);
-            for (File f: list) {
-                String name = f.getName().substring(0,f.getName().length()-4)+"0.txt";
-                listaGitFileova.add(new GitFile(name,f));
-            }
+        if(destination!=AppConfig.myServentInfo.getChordId()){
+            AppConfig.timestampedErrorPrint("Izabran cvor: " + destination);
+            sendFile(fullPath,destination,true,listaGitFileova);
         }else{
             AppConfig.timestampedErrorPrint("Izabran cvor si sam ti");
-            key=AppConfig.myServentInfo.getChordId();
-            List<File>  list = sendFile(fullPath,key,false);
-            for (File f: list) {
-                String name = f.getName().substring(0,f.getName().length()-4)+"0.txt";
-                listaGitFileova.add(new GitFile(name,f));
+            sendFile(fullPath,destination,false,listaGitFileova);
+        }
+
+
+
+        if(!DHTFiles.dhtFiles.containsKey(new GitKey(destination))){
+            DHTFiles.dhtFiles.put(new GitKey(destination), new ArrayList<>(listaGitFileova));
+        }else {
+            for (Map.Entry<GitKey, List<GitFile>> entry0: DHTFiles.dhtFiles.entrySet()) {
+                if(entry0.getKey().getRandNumber()==destination){
+                    DHTFiles.dhtFiles.get(entry0.getKey()).addAll(listaGitFileova);
+                }
             }
         }
-        LocalRoot.workingRoot.put(new GitKey(key), listaGitFileova);
-        DHTFiles.dhtFiles.put(new GitKey(key), listaGitFileova);
 
-        AppConfig.timestampedErrorPrint("------------------------");
-        AppConfig.timestampedErrorPrint(LocalStorage.storage.toString());
-        AppConfig.timestampedErrorPrint(DHTFiles.dhtFiles.toString());
+        if(!LocalRoot.workingRoot.containsKey(new GitKey(destination))){
+            LocalRoot.workingRoot.put(new GitKey(destination),new ArrayList<>(listaGitFileova));
+
+        }else {
+            for (Map.Entry<GitKey, List<GitFile>> entry1: LocalRoot.workingRoot.entrySet()) {
+                if(entry1.getKey().getRandNumber()==destination){
+                    LocalRoot.workingRoot.get(entry1.getKey()).addAll(listaGitFileova);
+                }
+            }
+        }
+
     }
 
 
-
-    private List<File> sendFile(String fullPath, int key, boolean flag){
-        AppConfig.timestampedErrorPrint(fullPath);
+    private void sendFile(String fullPath, int key, boolean flag, ArrayList<GitFile> listaGitFileova){
         if(fullPath.contains(".txt")){
-            List<File> listOfFiles = new ArrayList<>();
             File f = new File(fullPath);
             if(flag){
                 AddMessage addMsg = new AddMessage(
-                        AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
-                        f,key);
+                        AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(), f,key);
                 MessageUtil.sendMessage(addMsg);
             }
-            listOfFiles.add(f);
-            return listOfFiles;
+            String name = f.getName().substring(0,f.getName().length()-4)+"0.txt";
+            listaGitFileova.add(new GitFile(name,f));
         }else{
             try {
-                List<File> listOfFiles = new ArrayList<>();
-                Files.walk(Paths.get(fullPath))
-                        .filter(Files::isRegularFile)
-                        .forEach(a->{
-                            File f = new File(a.toFile().getAbsolutePath());
-                            if(flag) {
-                                AddMessage addMsg = new AddMessage(
-                                        AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
-                                        f, key);
-                                MessageUtil.sendMessage(addMsg);
-                            }
-                            listOfFiles.add(f);
-                        });
-                return listOfFiles;
+                Files.walk(Paths.get(fullPath)).filter(Files::isRegularFile).forEach(a->{
+
+                    File f = new File(a.toFile().getPath());
+                    System.out.println(f.getName());
+                    if(flag) {
+                        AddMessage addMsg = new AddMessage(
+                                AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getNextNodeForKey(key).getListenerPort(), f, key);
+                        MessageUtil.sendMessage(addMsg);
+                    }
+
+                    String name = f.getName().substring(0,f.getName().length()-4)+"0.txt";
+                    listaGitFileova.add(new GitFile(name,f));
+
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
-        AppConfig.timestampedStandardPrint("Komanda izvrsena");
-        return null;
     }
 }

@@ -2,7 +2,6 @@ package servent.handler;
 
 import app.AppConfig;
 import app.ServentInfo;
-import file.DHTFiles;
 import file.GitFile;
 import file.GitKey;
 import file.LocalStorage;
@@ -12,12 +11,8 @@ import servent.message.MessageType;
 import servent.message.util.MessageUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AddHandler implements MessageHandler {
 
@@ -26,59 +21,39 @@ public class AddHandler implements MessageHandler {
     public AddHandler(Message clientMessage) {
         this.clientMessage = clientMessage;
     }
-    /**TODO
-     *  adsadasd
-     *
-     * */
+
     @Override
     public void run() {
         if (clientMessage.getMessageType() == MessageType.ADD_GITFILE) {
             int key = ((AddMessage)clientMessage).getTarget();
             if (AppConfig.chordState.isKeyMine(key)) {
-
-                AppConfig.timestampedErrorPrint(AppConfig.myServentInfo.getStoragePath());
-                File f=null;
                 try {
-                     f = ((AddMessage)clientMessage).getFile();
+                    File f = ((AddMessage)clientMessage).getFile();
+
+                    String filePath1 = f.getPath().substring(f.getPath().indexOf("localRoot")).substring(10);
+                    String filePath2 = AppConfig.myServentInfo.getStoragePath()+"\\"+filePath1;
+                    String[] filePath3 = filePath2.split("\\\\");
+                    String dirs="";
+                    String name = "";
+                    for(int i =0 ; i<filePath3.length;i++){
+                        if(i<filePath3.length-1){
+                            dirs=dirs+filePath3[i]+"\\";
+                        }else{
+                            name=filePath3[i].substring(0,filePath3[i].length()-4)+"0.txt";
+                        }
+
+                    }
+                    //pravimo dir
+                    boolean b =new File(dirs).mkdirs();
+                    AppConfig.timestampedStandardPrint("premesten direktorijum: " + b);
+
+                    //premestamo fileove
+                    AppConfig.timestampedStandardPrint(dirs+"  " + name + "   " +  dirs+name);
+                    Files.move(Paths.get(f.getAbsolutePath()), Paths.get(dirs+name));
+
+
+                    LocalStorage.storage.add(new GitFile(name,new File(dirs+name),0));
                 }catch (Exception e){
-                    e.printStackTrace();
-                }
-                AppConfig.timestampedErrorPrint(f.getName());
-                try {
-                    File finalF = f;
-
-                    Files.walk(Paths.get(AppConfig.myServentInfo.getStoragePath()))
-                            .forEach(a-> {
-                                AppConfig.timestampedErrorPrint(a.toString());
-                                if(!finalF.getName().equals(a.toFile().getName())){
-
-                                    AppConfig.timestampedErrorPrint(finalF.getName() + " se premesta!");
-                                    List<GitFile> list = new ArrayList<>();
-                                    try {
-                                        String newName = finalF.getName();
-                                        newName =newName.substring(0,newName.length()-4)+"0.txt";
-                                        Files.move(Paths.get(finalF.getAbsolutePath()), Paths.get(AppConfig.myServentInfo.getStoragePath()+"/"+ newName));
-
-                                        if(LocalStorage.storage.containsKey(new GitKey(key))){
-                                            list.addAll(LocalStorage.storage.get(new GitKey(key)));
-                                        }
-
-                                        list.add(new GitFile(newName, new File(AppConfig.myServentInfo.getStoragePath()+"/"+ newName)));
-                                        AppConfig.timestampedErrorPrint(list.toString());
-                                        LocalStorage.storage.put(new GitKey(key),list);
-                                        DHTFiles.dhtFiles.put(new GitKey(key),list);
-                                        AppConfig.timestampedErrorPrint("------------------------");
-                                        AppConfig.timestampedErrorPrint(LocalStorage.storage.toString());
-                                        AppConfig.timestampedErrorPrint(DHTFiles.dhtFiles.toString());
-                                    } catch (Exception e) {
-                                        AppConfig.timestampedErrorPrint("Datoteka se ne nalazi na njegovom radnom korenu!");
-                                    }
-
-                                }else{
-                                    AppConfig.timestampedErrorPrint("Datoteka " + finalF.getName() + " vec postoji u sistemu!");
-                                }
-                            });
-                } catch (IOException e) {
                     e.printStackTrace();
                 }
 

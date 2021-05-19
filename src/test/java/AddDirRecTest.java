@@ -15,10 +15,15 @@ public class AddDirRecTest {
     public static void main(String[] args) throws IOException {
 
 
-        File f = new File("src/main/resources/servent1/localStorage/moja0.txt");
+        try {
 
-        String name = f.getName().substring(0,f.getName().length()-4)+"0.txt";
-        System.out.println(name);
+           boolean a = new File("src/main/resources/servent0/localStorage/dir1/ir/asdf.txt").mkdirs();
+            System.out.println(a);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         //Files.move(Paths.get("./src/main/resources/servent0/localRoot/dir2/dir2.2/moja.txt"), Paths.get("src/main/resources/servent0/localStorage/moja.txt"), StandardCopyOption.REPLACE_EXISTING);
     }
