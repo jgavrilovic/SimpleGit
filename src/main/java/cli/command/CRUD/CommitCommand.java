@@ -2,19 +2,18 @@ package cli.command.CRUD;
 
 import app.AppConfig;
 import cli.command.CLICommand;
-import file.*;
+import file.DHTFiles;
+import file.GitFile;
+import file.GitKey;
+import file.LocalRoot;
 import servent.handler.TellPullHandler;
-import servent.message.AddMessage;
-import servent.message.AskPullMessage;
-import servent.message.Message;
+import servent.message.CommitMessage;
 import servent.message.util.MessageUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 
@@ -45,21 +44,10 @@ public class CommitCommand implements CLICommand {
         }
 
 
-
-
         if(fullPath.contains(".txt")){
             AppConfig.timestampedStandardPrint("komituje se file " + fullPath);
             File myFile = new File(fullPath);
-            for (Map.Entry<GitKey,List<GitFile>> gitFile: LocalRoot.workingRoot.entrySet()) {
-                    gitFile.getValue().stream().filter(x -> x.getFile().getPath().contains(args)).forEach(f -> {
-                        if (TellPullHandler.lastModifiedTimeFiles.get(myFile) != myFile.lastModified()) {
-                            System.out.println(f.getFile().lastModified() + " 1 " + myFile.lastModified());
-                        } else {
-                            System.out.println(f.getFile().lastModified() + " 2 " + myFile.lastModified());
-                        }
-                    });
-
-            }
+            sendCommitMessage(myFile);
         }else{
             AppConfig.timestampedStandardPrint("komituje se dir: " + fullPath);
 
@@ -68,15 +56,7 @@ public class CommitCommand implements CLICommand {
                         .filter(Files::isRegularFile)
                         .forEach(a->{
                             File myFile = new File(a.toFile().getPath());
-                            for (Map.Entry<GitKey,List<GitFile>> gitFile: LocalRoot.workingRoot.entrySet()) {
-                                    gitFile.getValue().stream().filter(x -> x.getFile().getPath().contains(args)).forEach(f -> {
-                                        if (TellPullHandler.lastModifiedTimeFiles.get(myFile) != myFile.lastModified()) {
-                                            System.out.println(f.getFile().lastModified() + " 1 " + myFile.lastModified());
-                                        } else {
-                                            System.out.println(f.getFile().lastModified() + " 2 " + myFile.lastModified());
-                                        }
-                                    });
-                            }
+                            sendCommitMessage(myFile);
                         });
             } catch (IOException e) {
                 e.printStackTrace();
@@ -85,14 +65,35 @@ public class CommitCommand implements CLICommand {
     }
 
 
+    private int key=0;
+    private void sendCommitMessage(File myFile) {
+        LocalRoot.workingRoot.stream().filter(x->x.getFile().getPath().equals(myFile.getPath())).forEach(f->{
+            TellPullHandler.lastModifiedTimeFiles.entrySet().stream().filter(x-> x.getKey().getPath().equals(f.getFile().getPath())).forEach(fs->{
+                AppConfig.timestampedStandardPrint(fs.getValue()+"   "+f.getFile().lastModified());
+                if(fs.getValue()==f.getFile().lastModified()){
+
+                    DHTFiles.dhtFiles.entrySet().stream().filter(
+                            t-> t.getValue().stream().iterator().next().getName().equals(myFile.getName())
+                    ).forEach(o->{key=o.getKey().getRandNumber();});
+                    AppConfig.timestampedStandardPrint(key+"if");
+                    CommitMessage msg = new CommitMessage(
+                            AppConfig.myServentInfo.getListenerPort(),
+                            AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
+                            new GitFile(f.getName(),f.getFile(),f.getVersion()),key);
+                    MessageUtil.sendMessage(msg);
+                }else {//+1
+
+                    DHTFiles.dhtFiles.entrySet().stream().filter(
+                            t-> t.getValue().stream().iterator().next().getName().equals(myFile.getName())
+                    ).forEach(o->{key=o.getKey().getRandNumber();});
+                    AppConfig.timestampedStandardPrint(key+"else");
+                    CommitMessage msg = new CommitMessage(
+                            AppConfig.myServentInfo.getListenerPort(),
+                            AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
+                            new GitFile(f.getName(),f.getFile(),f.getVersion()+1),key);
+                    MessageUtil.sendMessage(msg);
+                }
+            });
+        });
+    }
 }
-
-//LocalRoot: {GitKey(randNumber=48)=
-// [GitFile(name=tri00.txt, file=src\main\resources\servent0\localRoot\tri0.txt, version=0),
-// GitFile(name=dva00.txt, file=src\main\resources\servent0\localRoot\dir1\dva0.txt, version=0),
-// GitFile(name=jedan00.txt, file=src\main\resources\servent0\localRoot\dir1\jedan0.txt, version=0)]}
-
-//16:48:52 - LastModified: {
-// src\main\resources\servent0\localRoot\dir1\jedan000.txt=1621435571736,
-// src\main\resources\servent0\localRoot\dir1\dva000.txt=1621435570869,
-// src\main\resources\servent0\localRoot\tri000.txt=1621435542988}

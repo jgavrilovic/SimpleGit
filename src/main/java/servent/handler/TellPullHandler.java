@@ -40,7 +40,7 @@ public class TellPullHandler  implements MessageHandler {
                 AppConfig.timestampedStandardPrint(gitFile+"");
                 String path = gitFile.getFile().getPath();
                 String fp =path.substring(path.indexOf("localStorage")).substring(13);
-                String pp = fp.substring(0,fp.length()-4)+"0.txt";
+                //String pp = fp.substring(0,fp.length()-4)+"0.txt";
 
 
                 //iscitam datoteku koju sam dobio
@@ -58,17 +58,17 @@ public class TellPullHandler  implements MessageHandler {
 
                 System.out.println(1);
                 //napravim novu datoteku na radnom korenu pod istim nazivom
-                File newf = new File(AppConfig.myServentInfo.getRootPath()+"/"+pp);
+                File newf = new File(AppConfig.myServentInfo.getRootPath()+"/"+fp);
                 boolean isCreated = newf.createNewFile();
                 if(isCreated){
                     AppConfig.timestampedStandardPrint("File je kreiran na vas radni koren: " + newf.getName());
                 }
 
-                lastModifiedTimeFiles.put(newf,newf.lastModified());
+
                 System.out.println(2);
-                for (Map.Entry<GitKey, List<GitFile>> entry: LocalRoot.workingRoot.entrySet()) {
-                    LocalRoot.workingRoot.get(entry.getKey()).add(new GitFile(newf.getName(),newf,0));
-                }
+
+                LocalRoot.workingRoot.add(new GitFile(newf.getName(),newf,0));
+                lastModifiedTimeFiles.put(newf,newf.lastModified());
 
                 System.out.println(3);
                 //prepisem njen sadrzaj u novu datoteku koju sam napravio

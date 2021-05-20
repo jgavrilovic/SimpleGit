@@ -49,38 +49,16 @@ public class AddCommand implements CLICommand {
             sendFile(fullPath,destination,false,listaGitFileova);
         }
 
-
-
-        if(!DHTFiles.dhtFiles.containsKey(new GitKey(destination))){
-            DHTFiles.dhtFiles.put(new GitKey(destination), new ArrayList<>(listaGitFileova));
-        }else {
-            for (Map.Entry<GitKey, List<GitFile>> entry0: DHTFiles.dhtFiles.entrySet()) {
-                if(entry0.getKey().getRandNumber()==destination){
-                    DHTFiles.dhtFiles.get(entry0.getKey()).addAll(listaGitFileova);
-                }
-            }
-        }
-
-        if(!LocalRoot.workingRoot.containsKey(new GitKey(destination))){
-            LocalRoot.workingRoot.put(new GitKey(destination),new ArrayList<>(listaGitFileova));
-
-        }else {
-            for (Map.Entry<GitKey, List<GitFile>> entry1: LocalRoot.workingRoot.entrySet()) {
-                if(entry1.getKey().getRandNumber()==destination){
-                    LocalRoot.workingRoot.get(entry1.getKey()).addAll(listaGitFileova);
-                }
-            }
-        }
-
     }
 
 
     private void sendFile(String fullPath, int key, boolean flag, ArrayList<GitFile> listaGitFileova){
         if(fullPath.contains(".txt")){
             File f = new File(fullPath);
+            LocalRoot.workingRoot.add(new GitFile(f.getName(),f));
             if(flag){
                 AddMessage addMsg = new AddMessage(
-                        AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(), f,key);
+                        AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(), f,AppConfig.myServentInfo.getListenerPort(), key);
                 MessageUtil.sendMessage(addMsg);
             }
             String name = f.getName().substring(0,f.getName().length()-4)+"0.txt";
@@ -90,10 +68,11 @@ public class AddCommand implements CLICommand {
                 Files.walk(Paths.get(fullPath)).filter(Files::isRegularFile).forEach(a->{
 
                     File f = new File(a.toFile().getPath());
-                    System.out.println(f.getName());
+                    LocalRoot.workingRoot.add(new GitFile(f.getName(),f));
+
                     if(flag) {
                         AddMessage addMsg = new AddMessage(
-                                AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getNextNodeForKey(key).getListenerPort(), f, key);
+                                AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getNextNodeForKey(key).getListenerPort(), f,AppConfig.myServentInfo.getListenerPort(), key);
                         MessageUtil.sendMessage(addMsg);
                     }
 
@@ -106,4 +85,5 @@ public class AddCommand implements CLICommand {
             }
         }
     }
+
 }

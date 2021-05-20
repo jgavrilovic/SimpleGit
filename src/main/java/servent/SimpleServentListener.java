@@ -79,6 +79,12 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					case TELL_PULL:
 						messageHandler = new TellPullHandler(clientMessage);
 						break;
+					case COMMIT:
+						messageHandler = new CommitHandler(clientMessage);
+						break;
+					case UPDATEDHT:
+						messageHandler = new UpdateDHTHandler(clientMessage);
+						break;
 				//---------------------------
 					case PING:
 						messageHandler = new PingHandler1(clientMessage);
