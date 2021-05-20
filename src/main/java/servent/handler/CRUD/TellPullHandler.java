@@ -1,18 +1,14 @@
-package servent.handler;
+package servent.handler.CRUD;
 
 import app.AppConfig;
 import file.GitFile;
-import file.GitKey;
 import file.LocalRoot;
+import servent.handler.MessageHandler;
 import servent.message.Message;
 import servent.message.MessageType;
-import servent.message.TellPullMessage;
+import servent.message.CRUD.TellPullMessage;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TellPullHandler  implements MessageHandler {
@@ -27,8 +23,7 @@ public class TellPullHandler  implements MessageHandler {
      *  Ako sam ja add datoteku i kazem pull
      *      1-verzija ista kao kod mene, ispisi da nema potrebe
      *      2-verzija razlicitia ili najnovija, dostavi je (logika stoji da je ime datoteke = ime+vezija)
-     *
-     *
+
      * */
 
     @Override

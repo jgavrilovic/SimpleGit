@@ -2,11 +2,9 @@ package cli.command.CRUD;
 
 import app.AppConfig;
 import cli.command.CLICommand;
-import file.DHTFiles;
 import file.GitFile;
-import file.GitKey;
 import file.LocalRoot;
-import servent.message.AddMessage;
+import servent.message.CRUD.AddMessage;
 import servent.message.util.MessageUtil;
 
 import java.io.File;
@@ -14,8 +12,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class AddCommand implements CLICommand {
 

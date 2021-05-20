@@ -4,7 +4,7 @@ import app.AppConfig;
 import file.DHTFiles;
 import file.LocalRoot;
 import file.LocalStorage;
-import servent.handler.TellPullHandler;
+import servent.handler.CRUD.TellPullHandler;
 
 public class InfoCommand implements CLICommand {
 

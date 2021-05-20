@@ -2,7 +2,7 @@ package app;
 
 import servent.message.AskGetMessage;
 import servent.message.PutMessage;
-import servent.message.WelcomeMessage;
+import servent.message.START.WelcomeMessage;
 import servent.message.util.MessageUtil;
 
 import java.io.IOException;

@@ -1,15 +1,12 @@
-package servent.handler;
+package servent.handler.START;
 
 import app.AppConfig;
-import app.ChordState;
 import app.ServentInfo;
-import app.ServentMain;
-import cli.command.CLICommand;
-import cli.command.StopCommand;
+import servent.handler.MessageHandler;
 import servent.message.*;
+import servent.message.START.NodeQuitMessage;
 import servent.message.util.MessageUtil;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

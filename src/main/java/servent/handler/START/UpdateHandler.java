@@ -1,11 +1,11 @@
-package servent.handler;
+package servent.handler.START;
 
 import app.AppConfig;
 import app.ServentInfo;
+import servent.handler.MessageHandler;
 import servent.message.Message;
 import servent.message.MessageType;
-import servent.message.PingMessage;
-import servent.message.UpdateMessage;
+import servent.message.START.UpdateMessage;
 import servent.message.util.MessageUtil;
 
 import java.util.ArrayList;

@@ -3,6 +3,8 @@ package servent;
 import app.AppConfig;
 import app.Cancellable;
 import servent.handler.*;
+import servent.handler.CRUD.*;
+import servent.handler.START.*;
 import servent.message.Message;
 import servent.message.util.MessageUtil;
 
@@ -84,6 +86,9 @@ public class SimpleServentListener implements Runnable, Cancellable {
 						break;
 					case UPDATEDHT:
 						messageHandler = new UpdateDHTHandler(clientMessage);
+						break;
+					case CONFLICT:
+						messageHandler = new ConflictHandler(clientMessage);
 						break;
 				//---------------------------
 					case PING:

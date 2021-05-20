@@ -1,10 +1,13 @@
-package servent.message;
+package servent.message.CRUD;
 
+
+import servent.message.BasicMessage;
+import servent.message.MessageType;
 
 import java.io.File;
 import java.nio.file.Path;
 
-public class AddMessage extends BasicMessage{
+public class AddMessage extends BasicMessage {
 
 
     private static final long serialVersionUID = 8579457735906956418L;

@@ -5,8 +5,7 @@ import app.AppConfig;
 import cli.command.CLICommand;
 
 import file.DHTFiles;
-import file.GitFile;
-import servent.message.AskPullMessage;
+import servent.message.CRUD.AskPullMessage;
 import servent.message.Message;
 import servent.message.util.MessageUtil;
 

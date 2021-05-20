@@ -1,4 +1,4 @@
-package servent.handler;
+package servent.handler.CRUD;
 
 import app.AppConfig;
 import app.ServentInfo;
@@ -7,10 +7,11 @@ import file.GitFile;
 import file.GitKey;
 import file.LocalStorage;
 import org.apache.commons.io.FileUtils;
-import servent.message.AddMessage;
+import servent.handler.MessageHandler;
+import servent.message.CRUD.AddMessage;
 import servent.message.Message;
 import servent.message.MessageType;
-import servent.message.UpdateDHTMessage;
+import servent.message.CRUD.UpdateDHTMessage;
 import servent.message.util.MessageUtil;
 
 import java.io.File;

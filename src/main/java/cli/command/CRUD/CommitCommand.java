@@ -4,18 +4,15 @@ import app.AppConfig;
 import cli.command.CLICommand;
 import file.DHTFiles;
 import file.GitFile;
-import file.GitKey;
 import file.LocalRoot;
-import servent.handler.TellPullHandler;
-import servent.message.CommitMessage;
+import servent.handler.CRUD.TellPullHandler;
+import servent.message.CRUD.CommitMessage;
 import servent.message.util.MessageUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
 
 public class CommitCommand implements CLICommand {
 
@@ -79,7 +76,8 @@ public class CommitCommand implements CLICommand {
                     CommitMessage msg = new CommitMessage(
                             AppConfig.myServentInfo.getListenerPort(),
                             AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
-                            new GitFile(f.getName(),f.getFile(),f.getVersion()),key);
+                            new GitFile(f.getName(),f.getFile(),f.getVersion()),
+                            AppConfig.myServentInfo.getChordId(),key);
                     MessageUtil.sendMessage(msg);
                 }else {//+1
 
@@ -90,7 +88,8 @@ public class CommitCommand implements CLICommand {
                     CommitMessage msg = new CommitMessage(
                             AppConfig.myServentInfo.getListenerPort(),
                             AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
-                            new GitFile(f.getName(),f.getFile(),f.getVersion()+1),key);
+                            new GitFile(f.getName(),f.getFile(),f.getVersion()+1),
+                            AppConfig.myServentInfo.getChordId(),key);
                     MessageUtil.sendMessage(msg);
                 }
             });

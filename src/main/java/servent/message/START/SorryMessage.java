@@ -1,4 +1,7 @@
-package servent.message;
+package servent.message.START;
+
+import servent.message.BasicMessage;
+import servent.message.MessageType;
 
 public class SorryMessage extends BasicMessage {
 

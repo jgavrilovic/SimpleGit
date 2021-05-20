@@ -1,4 +1,4 @@
-package servent.message;
+package servent.message.CRUD;
 
 import file.GitFile;
 import lombok.Getter;

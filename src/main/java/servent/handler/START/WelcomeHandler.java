@@ -1,10 +1,11 @@
-package servent.handler;
+package servent.handler.START;
 
 import app.AppConfig;
+import servent.handler.MessageHandler;
 import servent.message.Message;
 import servent.message.MessageType;
-import servent.message.UpdateMessage;
-import servent.message.WelcomeMessage;
+import servent.message.START.UpdateMessage;
+import servent.message.START.WelcomeMessage;
 import servent.message.util.MessageUtil;
 
 public class WelcomeHandler implements MessageHandler {

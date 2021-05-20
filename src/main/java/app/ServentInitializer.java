@@ -1,7 +1,6 @@
 package app;
 
-import servent.message.NewNodeMessage;
-import servent.message.PingMessage;
+import servent.message.START.NewNodeMessage;
 import servent.message.util.MessageUtil;
 
 import java.io.IOException;

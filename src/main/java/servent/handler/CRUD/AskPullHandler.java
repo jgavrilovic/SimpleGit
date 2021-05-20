@@ -1,14 +1,14 @@
-package servent.handler;
+package servent.handler.CRUD;
 
 import app.AppConfig;
 import app.ServentInfo;
 import file.GitFile;
-import file.GitKey;
 import file.LocalStorage;
-import servent.message.AskPullMessage;
+import servent.handler.MessageHandler;
+import servent.message.CRUD.AskPullMessage;
 import servent.message.Message;
 import servent.message.MessageType;
-import servent.message.TellPullMessage;
+import servent.message.CRUD.TellPullMessage;
 import servent.message.util.MessageUtil;
 
 import java.util.ArrayList;

@@ -1,6 +1,8 @@
-package servent.message;
+package servent.message.CRUD;
 
 import file.GitFile;
+import servent.message.BasicMessage;
+import servent.message.MessageType;
 
 import java.io.File;
 
