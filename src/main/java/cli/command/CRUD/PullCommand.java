@@ -45,14 +45,26 @@ public class PullCommand  implements CLICommand {
 
 
        try{
-           DHTFiles.dhtFiles.forEach((k, v) -> {
-               v.stream().filter(x->x.getName().equals(fileName) && x.getVersion()== version).forEach(gitFile -> {
-                   AppConfig.timestampedErrorPrint("saljem " + fileName + " " + k.getRandNumber());
-                   Message askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(k.getRandNumber()).getListenerPort(),fileName+" "+version,k.getRandNumber());
-                   MessageUtil.sendMessage(askPull);
-                   AppConfig.timestampedErrorPrint("posalo sam za datoteku na cvor " + fileName + " " + k.getRandNumber());
+           if(fileName.contains(".txt")){
+               AppConfig.timestampedErrorPrint("pretraga za file");
+               DHTFiles.dhtFiles.forEach((k, v) -> {
+                   v.stream().filter(x->x.getName().equals(fileName) && x.getVersion()== version).forEach(gitFile -> {
+                       Message askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(k.getRandNumber()).getListenerPort(),fileName+" "+version,k.getRandNumber());
+                       MessageUtil.sendMessage(askPull);
+                       AppConfig.timestampedErrorPrint("posalo sam za datoteku na cvor " + fileName + " " + k.getRandNumber());
+                   });
                });
-           });
+           }else{
+               AppConfig.timestampedErrorPrint("pretraga za dir");
+               DHTFiles.dhtFiles.forEach((k, v) -> {
+                   v.stream().filter(x->x.getFile().getPath().contains(fileName)).forEach(gitFile -> {
+                       Message askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(k.getRandNumber()).getListenerPort(),gitFile.getName()+" "+version,k.getRandNumber());
+                       MessageUtil.sendMessage(askPull);
+                       AppConfig.timestampedErrorPrint("posalo sam za datoteku " + gitFile.toString() + " na cvor " + k.getRandNumber());
+
+                   });
+               });
+           }
        }catch (ConcurrentModificationException e){
            e.printStackTrace();
        }

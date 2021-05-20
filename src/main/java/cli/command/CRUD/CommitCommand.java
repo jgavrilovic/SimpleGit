@@ -6,17 +6,14 @@ import file.DHTFiles;
 import file.GitFile;
 import file.GitKey;
 import file.LocalRoot;
-import servent.message.AddMessage;
-import servent.message.AskPullMessage;
-import servent.message.Message;
+import servent.handler.TellPullHandler;
+import servent.message.CommitMessage;
 import servent.message.util.MessageUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 
@@ -39,28 +36,64 @@ public class CommitCommand implements CLICommand {
 
     @Override
     public void execute(String args) {
-
-        String fullPath = AppConfig.myServentInfo.getRootPath()+"/"+args;
-
-
-
-        if(args.contains(".txt")){
-            File myFile = new File(fullPath);
-            for (Map.Entry<GitKey,List<GitFile>> gitFile: LocalRoot.workingRoot.entrySet()) {
-                if (gitFile.getKey().getRandNumber()==AppConfig.myServentInfo.getChordId()){
-                    gitFile.getValue().stream().filter(x-> x.getName().equals(args)).forEach(f->{
-                        if(f.getFile().lastModified()!=myFile.lastModified()){
-                            //povecaj verziju i commituj
-                        }else{
-                            //commituj sa istom verzijom
-                        }
-                    });
-                }
-            }
+        String fullPath;
+        if(args!=null){
+            fullPath = AppConfig.myServentInfo.getRootPath()+"/"+args;
         }else{
+            fullPath = AppConfig.myServentInfo.getRootPath();
+        }
 
+
+        if(fullPath.contains(".txt")){
+            AppConfig.timestampedStandardPrint("komituje se file " + fullPath);
+            File myFile = new File(fullPath);
+            sendCommitMessage(myFile);
+        }else{
+            AppConfig.timestampedStandardPrint("komituje se dir: " + fullPath);
+
+            try {
+                Files.walk(Paths.get(fullPath))
+                        .filter(Files::isRegularFile)
+                        .forEach(a->{
+                            File myFile = new File(a.toFile().getPath());
+                            sendCommitMessage(myFile);
+                        });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
+    private int key=0;
+    private void sendCommitMessage(File myFile) {
+        LocalRoot.workingRoot.stream().filter(x->x.getFile().getPath().equals(myFile.getPath())).forEach(f->{
+            TellPullHandler.lastModifiedTimeFiles.entrySet().stream().filter(x-> x.getKey().getPath().equals(f.getFile().getPath())).forEach(fs->{
+                AppConfig.timestampedStandardPrint(fs.getValue()+"   "+f.getFile().lastModified());
+                if(fs.getValue()==f.getFile().lastModified()){
+
+                    DHTFiles.dhtFiles.entrySet().stream().filter(
+                            t-> t.getValue().stream().iterator().next().getName().equals(myFile.getName())
+                    ).forEach(o->{key=o.getKey().getRandNumber();});
+                    AppConfig.timestampedStandardPrint(key+"if");
+                    CommitMessage msg = new CommitMessage(
+                            AppConfig.myServentInfo.getListenerPort(),
+                            AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
+                            new GitFile(f.getName(),f.getFile(),f.getVersion()),key);
+                    MessageUtil.sendMessage(msg);
+                }else {//+1
+
+                    DHTFiles.dhtFiles.entrySet().stream().filter(
+                            t-> t.getValue().stream().iterator().next().getName().equals(myFile.getName())
+                    ).forEach(o->{key=o.getKey().getRandNumber();});
+                    AppConfig.timestampedStandardPrint(key+"else");
+                    CommitMessage msg = new CommitMessage(
+                            AppConfig.myServentInfo.getListenerPort(),
+                            AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
+                            new GitFile(f.getName(),f.getFile(),f.getVersion()+1),key);
+                    MessageUtil.sendMessage(msg);
+                }
+            });
+        });
+    }
 }

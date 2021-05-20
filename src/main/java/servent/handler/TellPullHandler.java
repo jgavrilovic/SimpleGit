@@ -8,19 +8,17 @@ import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.TellPullMessage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TellPullHandler  implements MessageHandler {
 
     private Message clientMessage;
-
+    public static ConcurrentHashMap<File,Long> lastModifiedTimeFiles = new ConcurrentHashMap<>();
     public TellPullHandler(Message clientMessage) {
         this.clientMessage = clientMessage;
     }
@@ -36,48 +34,60 @@ public class TellPullHandler  implements MessageHandler {
     @Override
     public void run() {
         if (clientMessage.getMessageType() == MessageType.TELL_PULL) {
-
-            //dohvatim datoteku
-            GitFile gitFile = ((TellPullMessage)clientMessage).getFile();
-            File f = gitFile.getFile();
-            //napravim novu datoteku na radnom korenu pod istim nazivom
-            File newf = new File(AppConfig.myServentInfo.getRootPath()+"/"+gitFile.getName());
-
-
             try {
-                //kreiram je
+                //dohvatim datoteku
+                GitFile gitFile = ((TellPullMessage)clientMessage).getFile();
+                AppConfig.timestampedStandardPrint(gitFile+"");
+                String path = gitFile.getFile().getPath();
+                String fp =path.substring(path.indexOf("localStorage")).substring(13);
+                //String pp = fp.substring(0,fp.length()-4)+"0.txt";
+
+
+                //iscitam datoteku koju sam dobio
+                System.out.println(0);
+                FileReader fr=new FileReader(gitFile.getFile());   //reads the file
+                BufferedReader br=new BufferedReader(fr);  //creates a buffering character input stream
+                StringBuffer sb=new StringBuffer();    //constructs a string buffer with no characters
+                String line;
+                while((line=br.readLine())!=null)
+                {
+                    sb.append(line).append(" ");      //appends line to string buffer
+                }
+                fr.close();    //closes the stream and release the resources
+
+
+                System.out.println(1);
+                //napravim novu datoteku na radnom korenu pod istim nazivom
+                File newf = new File(AppConfig.myServentInfo.getRootPath()+"/"+fp);
                 boolean isCreated = newf.createNewFile();
                 if(isCreated){
                     AppConfig.timestampedStandardPrint("File je kreiran na vas radni koren: " + newf.getName());
                 }
 
-                //iscitam datoteku koju sam dobio
-                Scanner myReader = new Scanner(gitFile.getFile());
-                StringBuilder stringBuilder = new StringBuilder();
-                while (myReader.hasNextLine()) {
-                    stringBuilder.append(myReader.next()).append(" ");
-                }
-                myReader.close();
 
+                System.out.println(2);
+
+                LocalRoot.workingRoot.add(new GitFile(newf.getName(),newf,0));
+                lastModifiedTimeFiles.put(newf,newf.lastModified());
+
+                System.out.println(3);
                 //prepisem njen sadrzaj u novu datoteku koju sam napravio
-                FileWriter myWriter = new FileWriter(newf.getAbsolutePath());
-                myWriter.write(stringBuilder.toString());
+                FileWriter myWriter = new FileWriter(newf);
+                myWriter.write(sb.toString());
                 myWriter.close();
+                System.out.println(4);
+                AppConfig.timestampedStandardPrint(gitFile.getName()+" je dostavljena u vas radni koren!");
 
-                AppConfig.timestampedStandardPrint(gitFile.getName()+"je dostavljena u vas radni koren!");
+
             } catch (FileNotFoundException e) {
                 AppConfig.timestampedErrorPrint("Datoteka nije pronadjena! " + e.getMessage());
+                e.printStackTrace();
             }  catch (IOException e) {
                 AppConfig.timestampedErrorPrint("Datoteka ne moze da se otvori! " + e.getMessage());
+                e.printStackTrace();
             }
-            List<GitFile> fileList = new ArrayList<>();
-            if(LocalRoot.workingRoot.containsKey(new GitKey(AppConfig.myServentInfo.getChordId()))){
-                fileList.addAll(LocalRoot.workingRoot.get(new GitKey(AppConfig.myServentInfo.getChordId())));
-            }
-            fileList.add(new GitFile(newf.getName(), newf, gitFile.getVersion()));
-            LocalRoot.workingRoot.put(new GitKey(AppConfig.myServentInfo.getChordId()), fileList);
         } else {
-            AppConfig.timestampedErrorPrint("Tell get handler got a message that is not TELL_GET");
+            AppConfig.timestampedErrorPrint("Tell get handler got a message that is not TELL_PULL");
         }
     }
 

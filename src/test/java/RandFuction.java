@@ -15,5 +15,6 @@ public class RandFuction {
         System.out.println(a);
 
 
+
     }
 }
