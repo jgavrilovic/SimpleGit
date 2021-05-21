@@ -42,8 +42,14 @@ public class ConflictHandler  implements MessageHandler {
 
                     if(txt==ConflictType.WARNING){
                         AppConfig.timestampedStandardPrint(txt + " doslo je do konflikta...");
-                    }else{
-
+                    }else if(txt==ConflictType.DONE_PUSH){
+                        AppConfig.timestampedStandardPrint(txt + " je izabrana opcija...");
+                    }else if(txt==ConflictType.DONE_PULL){
+                        AppConfig.timestampedStandardPrint(txt + " je izabrana opcija...");
+                    }else if(txt==ConflictType.VIEW){
+                        AppConfig.timestampedStandardPrint(txt + " je izabrana opcija...");
+                    }else {
+                        AppConfig.timestampedErrorPrint(txt + " ovo nije predvidjeno ponasanje");
                     }
 
                     fromTO=((ConflictMessage)clientMessage).getSenderID();

@@ -29,6 +29,8 @@ public class AddHandler implements MessageHandler {
         this.clientMessage = clientMessage;
     }
 
+
+    /**ovde moras da dobijes ime fajla i sadrzinu njegovu txt*/
     @Override
     public void run() {
         if (clientMessage.getMessageType() == MessageType.ADD_GITFILE) {

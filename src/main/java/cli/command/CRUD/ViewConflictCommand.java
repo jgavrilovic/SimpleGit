@@ -29,7 +29,7 @@ public class ViewConflictCommand implements CLICommand {
         ConflictMessage conflictMessage = new ConflictMessage(
                 AppConfig.myServentInfo.getListenerPort(),
                 AppConfig.chordState.getNextNodeForKey(ConflictHandler.fromTO).getListenerPort(),
-                ConflictType.VIEW,
+                ConflictType.DONE_PULL,
                 null,
                 AppConfig.myServentInfo.getChordId(),
                 ConflictHandler.fromTO);

@@ -15,16 +15,6 @@ import java.util.ArrayList;
 
 public class AddCommand implements CLICommand {
 
-    //add naziv_fajla
-    //add naziv_dir
-
-    /**Logika je takva da kada dodam datoteku u sistem ja je tek tada dodam i na radni koren
-     * zato sto ako budem zeleo da povucem istu tu datoteku a verzija se promenila treba da dodje do konflikta u putanji*/
-
-    /**TODO
-     *  Napravi poruku koja ce obavestiti sve da je neka datoteka negde u sistemu da bi svi imali
-     *  @dhtFiles azuriran, za sada radi pull na onome ko je add datoteku
-     * */
     @Override
     public String commandName() {
         return "add";
@@ -33,6 +23,8 @@ public class AddCommand implements CLICommand {
     @Override
     public void execute(String args) {
         int rand = (int) (Math.random() * AppConfig.chordState.getAllNodeInfo().size());
+
+
         String fullPath=AppConfig.myServentInfo.getRootPath()+"/"+args;
         ArrayList<GitFile> listaGitFileova = new ArrayList<>();
         int destination = AppConfig.chordState.getAllNodeInfo().get(rand).getChordId();
@@ -49,6 +41,7 @@ public class AddCommand implements CLICommand {
 
 
     private void sendFile(String fullPath, int key, boolean flag, ArrayList<GitFile> listaGitFileova){
+        /**proveri da li je dir*/
         if(fullPath.contains(".txt")){
             File f = new File(fullPath);
             LocalRoot.workingRoot.add(new GitFile(f.getName(),f));

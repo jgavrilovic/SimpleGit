@@ -17,14 +17,6 @@ import java.nio.file.Paths;
 public class CommitCommand implements CLICommand {
 
 
-    /** TODO
-        * commit name - Osvežava datoteku name u sistemu za verzioniranje i povećava verziju.
-        * Sve datoteke kreću sa verzijom 0, i pri commit operaciji se verzija datoteke inkrementira.
-        * Kao name može da se navede i direktorijum, u kojem slučaju se vrši commit operacija rekurzivno za čitav direktorijum.
-        * Ako datoteka nije menjana od prethodne verzije, ne treba joj menjati verziju pri commit-ovanju.
-        * Ako je datoteka već ažurirana od strane nekog drugog čvora, tj. došlo je do konflikta, pitati korisnika kako želi da razreši konflikt
-    * */
-
     @Override
     public String commandName() {
         return "commit";
@@ -72,19 +64,19 @@ public class CommitCommand implements CLICommand {
                     DHTFiles.dhtFiles.entrySet().stream().filter(
                             t-> t.getValue().stream().iterator().next().getName().equals(myFile.getName())
                     ).forEach(o->{key=o.getKey().getRandNumber();});
-                    AppConfig.timestampedStandardPrint(key+"if");
-                    CommitMessage msg = new CommitMessage(
-                            AppConfig.myServentInfo.getListenerPort(),
-                            AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
-                            new GitFile(f.getName(),f.getFile(),f.getVersion()),
-                            AppConfig.myServentInfo.getChordId(),key);
-                    MessageUtil.sendMessage(msg);
-                }else {//+1
+
+//                    CommitMessage msg = new CommitMessage(
+//                            AppConfig.myServentInfo.getListenerPort(),
+//                            AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
+//                            new GitFile(f.getName(),f.getFile(),f.getVersion()),
+//                            AppConfig.myServentInfo.getChordId(),key);
+//                    MessageUtil.sendMessage(msg);
+                }else {
 
                     DHTFiles.dhtFiles.entrySet().stream().filter(
                             t-> t.getValue().stream().iterator().next().getName().equals(myFile.getName())
                     ).forEach(o->{key=o.getKey().getRandNumber();});
-                    AppConfig.timestampedStandardPrint(key+"else");
+
                     CommitMessage msg = new CommitMessage(
                             AppConfig.myServentInfo.getListenerPort(),
                             AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),

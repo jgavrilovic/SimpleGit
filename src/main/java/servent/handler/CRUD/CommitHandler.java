@@ -61,7 +61,7 @@ public class CommitHandler implements MessageHandler {
 
 
 
-
+                    /**OVO TREBA GORE U IF PETLJI*/
                     GitFile gitFile1 = LocalStorage.storage.stream().iterator().next();
                     GitFile gitFile2 = temp.element();
                     if(gitFile2.getName().equals(gitFile1.getName()) && gitFile2.getFile().getPath().equals(gitFile1.getFile().getPath()) && gitFile2.getVersion()==gitFile1.getVersion()){

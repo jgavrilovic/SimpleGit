@@ -14,8 +14,6 @@ import java.util.ConcurrentModificationException;
 
 public class PullCommand  implements CLICommand {
 
-    //pull naziv_fajla [version]
-
     @Override
     public String commandName() {
         return "pull";
