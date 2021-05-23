@@ -76,6 +76,13 @@ public class ConflictHandler  implements MessageHandler {
                         AppConfig.timestampedStandardPrint(content);
 
 
+                        /**TODO
+                         *  Odavde vidim da kada radim push ne uzimam verziju u obzir!
+                         *  Sending message ConflictMessage{conflictType=PUSH, senderID=4, target=48, name='src/main/resources/servent1/localRoot/a2.txt', content='ser2
+                         *  Got message     ConflictMessage{conflictType=PUSH, senderID=4, target=48, name='src/main/resources/servent1/localRoot/a2.txt', content='ser2', version=0}
+                         *
+                         *  Takodje proberi f.getName() i name jer baca StringIndexOutOfBoundsException
+                         * */
                         LocalStorage.storage.stream().filter(f -> f.getName().contains(name.substring(name.indexOf("localStorage\\")).replace("localStorage\\",""))).iterator().forEachRemaining(o -> {
                             AppConfig.timestampedStandardPrint("Datoteka se prepisuje");
                             try {
