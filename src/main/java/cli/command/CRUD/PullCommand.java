@@ -18,8 +18,6 @@ public class PullCommand  implements CLICommand {
         return "pull";
     }
 
-
-
     @Override
     public void execute(String args) {
         final String fileName;

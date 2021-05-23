@@ -1,7 +1,6 @@
 package cli.command;
 
 import app.AppConfig;
-import file.DHTFiles;
 import file.LocalRoot;
 import file.LocalStorage;
 import servent.handler.CRUD.TellPullHandler;

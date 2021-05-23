@@ -8,12 +8,12 @@ public class StopCommand implements CLICommand {
 
 	private CLIParser parser;
 	private SimpleServentListener listener;
-	
+
 	public StopCommand(CLIParser parser, SimpleServentListener listener) {
 		this.parser = parser;
 		this.listener = listener;
 	}
-	
+
 	@Override
 	public String commandName() {
 		return "stop";

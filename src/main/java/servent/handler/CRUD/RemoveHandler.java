@@ -3,21 +3,17 @@ package servent.handler.CRUD;
 import app.AppConfig;
 import app.ServentInfo;
 import file.GitFile;
-import file.LocalRoot;
 import file.LocalStorage;
 import servent.handler.MessageHandler;
-import servent.message.CRUD.AddMessage;
 import servent.message.CRUD.RemoveMessage;
 import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.util.MessageUtil;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class RemoveHandler implements MessageHandler {

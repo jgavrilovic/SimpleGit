@@ -1,8 +1,9 @@
 package servent.message.CRUD;
 
+import lombok.Getter;
 import servent.message.BasicMessage;
 import servent.message.MessageType;
-
+@Getter
 public class AskPullMessage extends BasicMessage {
 
 
@@ -14,7 +15,10 @@ public class AskPullMessage extends BasicMessage {
         this.target=target;
     }
 
-    public int getTarget() {
-        return target;
+    @Override
+    public String toString() {
+        return "AskPullMessage{" +
+                "target=" + target +
+                '}';
     }
 }

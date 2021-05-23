@@ -2,8 +2,6 @@ package cli.command.CRUD;
 
 import app.AppConfig;
 import cli.command.CLICommand;
-import file.DHTFiles;
-import file.GitFile;
 import file.HashFile;
 import file.LocalRoot;
 import servent.handler.CRUD.TellPullHandler;

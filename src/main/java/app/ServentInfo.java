@@ -1,8 +1,10 @@
 package app;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 
-
+@Getter
 public class ServentInfo implements Serializable {
 
 	private static final long serialVersionUID = 5304170042791281555L;
@@ -44,46 +46,19 @@ public class ServentInfo implements Serializable {
 		this.teamLimit=teamLimit;
 	}
 
-	public String getIpAddress() {
-		return ipAddress;
-	}
-
-	public int getListenerPort() {
-		return listenerPort;
-	}
-
-	public int getChordId() {
-		return chordId;
-	}
-
-	public String getRootPath() {
-		return rootPath;
-	}
-
-	public String getStoragePath() {
-		return storagePath;
-	}
-
-	public int getWeekLimit() {
-		return weekLimit;
-	}
-
-	public int getStrongLimit() {
-		return strongLimit;
-	}
-
-	public String getTeamName() {
-		return teamName;
-	}
-
-	public int getTeamLimit() {
-		return teamLimit;
-	}
-
 
 	@Override
 	public String toString() {
-		return "[" + chordId + "|" + ipAddress + "|" + listenerPort + "|" + teamName + "]";
+		return "ServentInfo{" +
+				"ipAddress='" + ipAddress + '\'' +
+				", listenerPort=" + listenerPort +
+				", chordId=" + chordId +
+				", rootPath='" + rootPath + '\'' +
+				", storagePath='" + storagePath + '\'' +
+				", weekLimit=" + weekLimit +
+				", strongLimit=" + strongLimit +
+				", teamName='" + teamName + '\'' +
+				", teamLimit=" + teamLimit +
+				'}';
 	}
-
 }

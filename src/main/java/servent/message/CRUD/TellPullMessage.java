@@ -1,11 +1,10 @@
 package servent.message.CRUD;
 
-import file.GitFile;
 import lombok.Getter;
 import servent.message.BasicMessage;
 import servent.message.MessageType;
 
-import java.io.File;
+
 @Getter
 public class TellPullMessage  extends BasicMessage {
 

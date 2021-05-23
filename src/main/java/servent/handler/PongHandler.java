@@ -1,13 +1,9 @@
 package servent.handler;
 
-import app.AppConfig;
-import servent.message.*;
-import servent.message.util.MessageUtil;
+import servent.message.Message;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PongHandler implements MessageHandler {
@@ -25,30 +21,30 @@ public class PongHandler implements MessageHandler {
     }
 }
 
-    //successor_info
+//successor_info
 
-    /**
-     * ja sam 0: saljem PING
-     *
-     *
-     * Stigao mi PING: (ja sam 1)
-     *      Saljem cvoru iza PONG
-     *      Saljem cvoru ispred PING
-     *      Krece timer za odgovor sa njegovim IDem
-     *          cekam do 1000ms:
-     *              DOBIO->prekidam timer
-     *              NE->cekam da predje 1000ms
-     *      Preslo je 1000ms saljem cvoru iza da ga PING-a i cekam odgovor od njega
-     *          Da->cekam 10000ms i saljem da ga uklone svi
-     *          Ne->sa mnom nesto nije uredu JEL?!
-     *
-     *
-     * Stigao mi PONG:  (ja sam 0)
-     *        prazna poruka je od 1..sve cool
-     *        alert poruka od 1.. daj ja da pingam 2
-     *        no poruka od 2.. dakle sa kecom nesto nije ok
-     *
-     * */
+/**
+ * ja sam 0: saljem PING
+ *
+ *
+ * Stigao mi PING: (ja sam 1)
+ *      Saljem cvoru iza PONG
+ *      Saljem cvoru ispred PING
+ *      Krece timer za odgovor sa njegovim IDem
+ *          cekam do 1000ms:
+ *              DOBIO->prekidam timer
+ *              NE->cekam da predje 1000ms
+ *      Preslo je 1000ms saljem cvoru iza da ga PING-a i cekam odgovor od njega
+ *          Da->cekam 10000ms i saljem da ga uklone svi
+ *          Ne->sa mnom nesto nije uredu JEL?!
+ *
+ *
+ * Stigao mi PONG:  (ja sam 0)
+ *        prazna poruka je od 1..sve cool
+ *        alert poruka od 1.. daj ja da pingam 2
+ *        no poruka od 2.. dakle sa kecom nesto nije ok
+ *
+ * */
 /*
     public static boolean basicPongRecived = false;
     public static boolean alertPongRecived = false;

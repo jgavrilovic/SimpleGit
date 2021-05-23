@@ -4,11 +4,14 @@ import app.AppConfig;
 import file.GitFile;
 import file.LocalRoot;
 import servent.handler.MessageHandler;
+import servent.message.CRUD.TellPullMessage;
 import servent.message.Message;
 import servent.message.MessageType;
-import servent.message.CRUD.TellPullMessage;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TellPullHandler  implements MessageHandler {
@@ -29,7 +32,7 @@ public class TellPullHandler  implements MessageHandler {
                 String fileContent = ((TellPullMessage)clientMessage).getContentOfFile();
                 AppConfig.timestampedStandardPrint(fileName+"");
 
-                /**ej problem je kada 1 satvi u 2 a 3 povuce iz 2 jer nema vec napravljen dir!*/
+                /**TODO ej problem je kada 1 satvi u 2 a 3 povuce iz 2 jer nema vec napravljen dir!*/
 
                 //napravim novu datoteku na radnom korenu pod istim nazivom
                 String newPath = fileName.substring(fileName.indexOf("localStorage")).replace("localStorage","");

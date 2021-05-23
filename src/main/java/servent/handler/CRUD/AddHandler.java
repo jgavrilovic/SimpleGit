@@ -13,7 +13,6 @@ import servent.message.util.MessageUtil;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class AddHandler implements MessageHandler {
 
@@ -28,7 +27,6 @@ public class AddHandler implements MessageHandler {
     public void run() {
         if (clientMessage.getMessageType() == MessageType.ADD_GITFILE) {
 
-            ArrayList<GitFile> templist= new ArrayList<>();
             int key = ((AddMessage)clientMessage).getTarget();
 
             //provera da li sam ja kranji cvor , ili dalje prosledjujem poruku
@@ -79,19 +77,6 @@ public class AddHandler implements MessageHandler {
                     //dodajem gitfile(name,verzija) u storage
                     GitFile gitFile = new GitFile(f.getPath());
                     LocalStorage.storage.add(gitFile);
-//
-//                    //dodajem gitfile u DHT tabelu!
-//                    templist.add(gitFile);
-//                    if(!DHTFiles.dhtFiles.containsKey(new GitKey(AppConfig.myServentInfo.getChordId()))){
-//                        DHTFiles.dhtFiles.put(new GitKey(AppConfig.myServentInfo.getChordId()), new ArrayList<>(templist));
-//                    }else {
-//                        for (Map.Entry<GitKey, List<GitFile>> entry0: DHTFiles.dhtFiles.entrySet()) {
-//                            if(entry0.getKey().getRandNumber()==AppConfig.myServentInfo.getChordId()){
-//                                DHTFiles.dhtFiles.get(entry0.getKey()).addAll(templist);
-//                            }
-//                        }
-//                    }
-
 
                 }catch (Exception e){
                     AppConfig.timestampedErrorPrint("Doslo je do greske: ");

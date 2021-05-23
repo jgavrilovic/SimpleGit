@@ -17,19 +17,15 @@ public class PushConflictCommand implements CLICommand {
         return "push-conflict";
     }
 
-
     @Override
     public void execute(String args) {
 
-        AppConfig.timestampedErrorPrint(ConflictHandler.fileProblem);
         Pattern p = Pattern.compile("[0-9]");
         String path = ConflictHandler.fileProblem.substring(ConflictHandler.fileProblem.indexOf("localRoot")+10);
         Matcher m = p.matcher(path);
         m.find();
-        int a = Integer.parseInt(m.group());
-
-        String content = AddCommand.fileReader(AppConfig.myServentInfo.getRootPath()+"/"+path.replaceAll("[0-9]",a-1+""));
-        AppConfig.timestampedErrorPrint("PUSH: " + content);
+        int version = Integer.parseInt(m.group());
+        String content = AddCommand.fileReader(AppConfig.myServentInfo.getRootPath()+"/"+path.replaceAll("[0-9]",version-1+""));
         ConflictMessage conflictMessage = new ConflictMessage(
                 AppConfig.myServentInfo.getListenerPort(),
                 AppConfig.chordState.getNextNodeForKey(ConflictHandler.target).getListenerPort(),

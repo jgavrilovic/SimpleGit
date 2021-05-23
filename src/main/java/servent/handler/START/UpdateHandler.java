@@ -14,11 +14,11 @@ import java.util.List;
 public class UpdateHandler implements MessageHandler {
 
 	private Message clientMessage;
-	
+
 	public UpdateHandler(Message clientMessage) {
 		this.clientMessage = clientMessage;
 	}
-	
+
 	@Override
 	public void run() {
 		if (clientMessage.getMessageType() == MessageType.UPDATE) {
@@ -26,7 +26,7 @@ public class UpdateHandler implements MessageHandler {
 				ServentInfo newNodInfo = new ServentInfo("localhost", clientMessage.getSenderPort());
 				List<ServentInfo> newNodes = new ArrayList<>();
 				newNodes.add(newNodInfo);
-				
+
 				AppConfig.chordState.addNodes(newNodes);
 				String newMessageText = "";
 				if (clientMessage.getMessageText().equals("")) {
@@ -40,7 +40,7 @@ public class UpdateHandler implements MessageHandler {
 			} else {
 				String messageText = clientMessage.getMessageText();
 				String[] ports = messageText.split(",");
-				
+
 				List<ServentInfo> allNodes = new ArrayList<>();
 				for (String port : ports) {
 					allNodes.add(new ServentInfo("localhost", Integer.parseInt(port)));

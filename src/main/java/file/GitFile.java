@@ -2,7 +2,6 @@ package file;
 
 import lombok.Data;
 
-import java.io.File;
 import java.io.Serializable;
 
 

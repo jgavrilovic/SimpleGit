@@ -6,11 +6,6 @@ import servent.message.Message;
 import servent.message.START.NodeQuitMessage;
 import servent.message.util.MessageUtil;
 
-
-/*
-    -Saljem poruku da zelim da se iskljucim iz sistema
-*/
-
 public class NodeQuitCommand implements CLICommand {
 
     @Override
@@ -22,6 +17,8 @@ public class NodeQuitCommand implements CLICommand {
     public void execute(String args) {
         try {
 
+            /**TODO
+             *  Kada su dva cvora baca error*/
             //port - id - port(mog prethodnika)
             String msg = AppConfig.myServentInfo.getListenerPort() + " " + AppConfig.myServentInfo.getChordId() +" " + AppConfig.chordState.getPredecessor().getListenerPort();
 

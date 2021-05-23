@@ -138,7 +138,7 @@ public class ConflictHandler  implements MessageHandler {
                 }
 
             }  catch (Exception e) {
-              e.printStackTrace();
+                e.printStackTrace();
             }
         } else {
             AppConfig.timestampedErrorPrint("Conflict handler je prihvatio poruku :" + clientMessage.getMessageType() +" GRESKA!");

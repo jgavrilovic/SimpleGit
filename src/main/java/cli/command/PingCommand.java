@@ -2,15 +2,9 @@ package cli.command;
 
 
 import app.AppConfig;
-import app.ServentInfo;
-import servent.handler.PongHandler;
 import servent.message.PingMessage;
 import servent.message.PingType;
-import servent.message.PongMessage;
 import servent.message.util.MessageUtil;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class PingCommand implements CLICommand {
 

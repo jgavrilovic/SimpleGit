@@ -59,55 +59,50 @@ public class CommitHandler implements MessageHandler {
                     });
 
 
-                        if(conflict.get()==0) {
-                            //ako nije ista verzija cuvam u storage kao naziv: naziv+verzija , verzija
-                            AppConfig.timestampedStandardPrint("nije ista verzija");
-                            String path = name.substring(0,name.length()-5)+version+".txt";
-                            path=path.replace(path.substring(0,path.indexOf("localRoot")+9),AppConfig.myServentInfo.getStoragePath());
+                    if(conflict.get()==0) {
+                        //ako nije ista verzija cuvam u storage kao naziv: naziv+verzija , verzija
+                        AppConfig.timestampedStandardPrint("nije ista verzija");
+                        String path = name.substring(0,name.length()-5)+version+".txt";
+                        path=path.replace(path.substring(0,path.indexOf("localRoot")+9),AppConfig.myServentInfo.getStoragePath());
 
-                            File file = new File(path);
-                            try {
-                                boolean isCreated = file.createNewFile();
-                                if(isCreated){
-                                    AppConfig.timestampedStandardPrint("Dodata nova datoteka u sistem " + file.getName() );
-                                }
-
-                                FileWriter myWriter = new FileWriter(file);
-                                myWriter.write(content);
-                                myWriter.close();
-                                AppConfig.timestampedStandardPrint("prepisan sadrzaj datoteke!");
-                            } catch (IOException e) {
-                                AppConfig.timestampedErrorPrint("Doslo je do problema pri kopiranju ili kreiranju fajla " +e.getMessage() );
+                        File file = new File(path);
+                        try {
+                            boolean isCreated = file.createNewFile();
+                            if(isCreated){
+                                AppConfig.timestampedStandardPrint("Dodata nova datoteka u sistem " + file.getName() );
                             }
-                            temp.add(new GitFile(file.getPath(),version));
-                        }else{
-                            LocalStorage.storage.stream().filter(f-> f.getName().replaceAll("[0-9]", "").contains(datoteka.replaceAll("[0-9]", ""))
-                             && f.getVersion()==version).forEach(o->{
-                                int target = ((CommitMessage) clientMessage).getSenderID();
-                                statFIleName = o.getName();
-                                statFIleCont = AddCommand.fileReader(o.getName());
-                                statFIleVersion=o.getVersion();
-                                AppConfig.timestampedErrorPrint(statFIleName+" "+statFIleCont+" "+statFIleVersion);
 
-                                //salje se poruka za konflikt i ocekuje se da izabere nacin kako da resi konflikt
-                                String[] nameAr = o.getName().split("\\\\");
-                                String myName = AppConfig.myServentInfo.getRootPath()+"/"+nameAr[nameAr.length-1];
-                                ConflictMessage conflictMessage = new ConflictMessage(
-                                        AppConfig.myServentInfo.getListenerPort(),
-                                        AppConfig.chordState.getNextNodeForKey(target).getListenerPort(),
-                                        myName,"",
-                                        ConflictType.WARNING,
-                                        AppConfig.myServentInfo.getChordId(), target
-                                );
-                                MessageUtil.sendMessage(conflictMessage);
-                                conflict.set(0);
-                            });
+                            FileWriter myWriter = new FileWriter(file);
+                            myWriter.write(content);
+                            myWriter.close();
+                            AppConfig.timestampedStandardPrint("prepisan sadrzaj datoteke!");
+                        } catch (IOException e) {
+                            AppConfig.timestampedErrorPrint("Doslo je do problema pri kopiranju ili kreiranju fajla " +e.getMessage() );
                         }
+                        temp.add(new GitFile(file.getPath(),version));
+                    }else{
+                        LocalStorage.storage.stream().filter(f-> f.getName().replaceAll("[0-9]", "").contains(datoteka.replaceAll("[0-9]", ""))
+                                && f.getVersion()==version).forEach(o->{
+                            int target = ((CommitMessage) clientMessage).getSenderID();
+                            statFIleName = o.getName();
+                            statFIleCont = AddCommand.fileReader(o.getName());
+                            statFIleVersion=o.getVersion();
+                            AppConfig.timestampedErrorPrint(statFIleName+" "+statFIleCont+" "+statFIleVersion);
 
-
-
-
-
+                            //salje se poruka za konflikt i ocekuje se da izabere nacin kako da resi konflikt
+                            String[] nameAr = o.getName().split("\\\\");
+                            String myName = AppConfig.myServentInfo.getRootPath()+"/"+nameAr[nameAr.length-1];
+                            ConflictMessage conflictMessage = new ConflictMessage(
+                                    AppConfig.myServentInfo.getListenerPort(),
+                                    AppConfig.chordState.getNextNodeForKey(target).getListenerPort(),
+                                    myName,"",
+                                    ConflictType.WARNING,
+                                    AppConfig.myServentInfo.getChordId(), target
+                            );
+                            MessageUtil.sendMessage(conflictMessage);
+                            conflict.set(0);
+                        });
+                    }
                     LocalStorage.storage.addAll(temp);
                     temp.clear();
 

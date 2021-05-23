@@ -1,16 +1,6 @@
 package servent.handler;
 
-import app.AppConfig;
-import app.ServentInfo;
-import servent.message.*;
-import servent.message.util.MessageUtil;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import servent.message.Message;
 
 
 public class PingHandler implements MessageHandler {
@@ -26,16 +16,16 @@ public class PingHandler implements MessageHandler {
 
     }
 }
-    //successor_info
+//successor_info
 
-    /**
-     * -veze u sistemu
-     * -cuvanje podataka(kloniranje)
-     * -raspordjivanje datoteka
-     * -otkaz cvora i reorganizacija
-     *
-     *
-     * */
+/**
+ * -veze u sistemu
+ * -cuvanje podataka(kloniranje)
+ * -raspordjivanje datoteka
+ * -otkaz cvora i reorganizacija
+ *
+ *
+ * */
     /*
     private TimerTask timerTask = new TimerTask() {
         @Override
