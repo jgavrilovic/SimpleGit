@@ -19,14 +19,7 @@ public class ConflictHandler  implements MessageHandler {
     public ConflictHandler(Message clientMessage) {
         this.clientMessage = clientMessage;
     }
-    /**
-     *
-     * posaljem @ConflictMessage biraj opcije, null
-     * vrati mi view - posaljem komanda view, gitgile()
-     * vrati mi push - posaljem DONE_PUSH, null ->upisem njegovu
-     * vrati mi pull - posaljem DONE_Pull, gitfile() -> update
-     *
-     * */
+
 
     public static int target =0;
     public static String fileProblem;
@@ -148,7 +141,7 @@ public class ConflictHandler  implements MessageHandler {
               e.printStackTrace();
             }
         } else {
-            AppConfig.timestampedErrorPrint("ConflictHandler got a message that is not CONFLICT");
+            AppConfig.timestampedErrorPrint("Conflict handler je prihvatio poruku :" + clientMessage.getMessageType() +" GRESKA!");
         }
     }
 

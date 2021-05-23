@@ -2,13 +2,10 @@ package servent.handler.CRUD;
 
 import app.AppConfig;
 import app.ServentInfo;
-import file.DHTFiles;
 import file.GitFile;
-import file.GitKey;
 import file.LocalStorage;
 import servent.handler.MessageHandler;
 import servent.message.CRUD.AddMessage;
-import servent.message.CRUD.UpdateDHTMessage;
 import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.util.MessageUtil;
@@ -17,8 +14,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class AddHandler implements MessageHandler {
 
@@ -84,18 +79,18 @@ public class AddHandler implements MessageHandler {
                     //dodajem gitfile(name,verzija) u storage
                     GitFile gitFile = new GitFile(f.getPath());
                     LocalStorage.storage.add(gitFile);
-
-                    //dodajem gitfile u DHT tabelu!
-                    templist.add(gitFile);
-                    if(!DHTFiles.dhtFiles.containsKey(new GitKey(AppConfig.myServentInfo.getChordId()))){
-                        DHTFiles.dhtFiles.put(new GitKey(AppConfig.myServentInfo.getChordId()), new ArrayList<>(templist));
-                    }else {
-                        for (Map.Entry<GitKey, List<GitFile>> entry0: DHTFiles.dhtFiles.entrySet()) {
-                            if(entry0.getKey().getRandNumber()==AppConfig.myServentInfo.getChordId()){
-                                DHTFiles.dhtFiles.get(entry0.getKey()).addAll(templist);
-                            }
-                        }
-                    }
+//
+//                    //dodajem gitfile u DHT tabelu!
+//                    templist.add(gitFile);
+//                    if(!DHTFiles.dhtFiles.containsKey(new GitKey(AppConfig.myServentInfo.getChordId()))){
+//                        DHTFiles.dhtFiles.put(new GitKey(AppConfig.myServentInfo.getChordId()), new ArrayList<>(templist));
+//                    }else {
+//                        for (Map.Entry<GitKey, List<GitFile>> entry0: DHTFiles.dhtFiles.entrySet()) {
+//                            if(entry0.getKey().getRandNumber()==AppConfig.myServentInfo.getChordId()){
+//                                DHTFiles.dhtFiles.get(entry0.getKey()).addAll(templist);
+//                            }
+//                        }
+//                    }
 
 
                 }catch (Exception e){

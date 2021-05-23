@@ -5,5 +5,5 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DHTFiles {
 
-    public static ConcurrentHashMap<GitKey, List<GitFile>> dhtFiles = new ConcurrentHashMap<>();
+    //public static ConcurrentHashMap<GitKey, List<GitFile>> dhtFiles = new ConcurrentHashMap<>();
 }

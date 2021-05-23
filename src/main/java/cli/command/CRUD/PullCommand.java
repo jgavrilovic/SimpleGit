@@ -40,32 +40,23 @@ public class PullCommand  implements CLICommand {
         }
 
         //salje se zahtev za datoteku na odredjen id, pomocu hash funkcije
-
-
         try{
             if(fileName.contains(".txt")){
                 int key = HashFile.hashFileName(fileName.substring(0,fileName.indexOf(".")-1)+".txt");
                 AppConfig.timestampedStandardPrint("Pocinje pretraga za datoteku!");
-//               DHTFiles.dhtFiles.forEach((k, v) -> {
-//                   v.stream().filter(x->x.getName().contains(fileName) && x.getVersion()== version).forEach(gitFile -> {
 
                 Message askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),fileName+" "+version,key);
                 MessageUtil.sendMessage(askPull);
                 AppConfig.timestampedErrorPrint("Datoteka " + fileName + " poslana na cvor: " + key);
-//                   });
-//               });
+
             }else{
                 int key = HashFile.hashFileName(fileName);
                 AppConfig.timestampedStandardPrint("Pocinje pretraga za direktorijum!");
-//               DHTFiles.dhtFiles.forEach((k, v) -> {
-//                   v.stream().filter(x->x.getName().contains(fileName)).forEach(gitFile -> {
 
                 Message askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),fileName +" "+version,key);
                 MessageUtil.sendMessage(askPull);
                 AppConfig.timestampedErrorPrint("Datoteka " + fileName + " poslana na cvor: " + key);
-//
-//                   });
-//               });
+
             }
         }catch (ConcurrentModificationException e){
             e.printStackTrace();

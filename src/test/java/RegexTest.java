@@ -9,12 +9,14 @@ public class RegexTest {
 
 
 
-        Pattern p = Pattern.compile("\\d");
-        String path = "a2.txt";
-        Matcher m = p.matcher(path);
-        m.find();
-        int a = Integer.parseInt(m.group());
-        System.out.println(a);
+
+        String path = "//src/servent0/a2.txt";
+        System.out.println(path.replaceAll("\\d\\.","."));
+//        Pattern p = Pattern.compile("\\d.");
+//        Matcher m = p.matcher(path);
+//        m.find();
+//        int a = Integer.parseInt(m.group());
+//        System.out.println(a);
 
     }
 

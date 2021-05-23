@@ -84,8 +84,8 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					case COMMIT:
 						messageHandler = new CommitHandler(clientMessage);
 						break;
-					case UPDATEDHT:
-						messageHandler = new UpdateDHTHandler(clientMessage);
+					case DELETE:
+						messageHandler = new RemoveHandler(clientMessage);
 						break;
 					case CONFLICT:
 						messageHandler = new ConflictHandler(clientMessage);

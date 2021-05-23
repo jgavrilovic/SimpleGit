@@ -20,7 +20,7 @@ public class InfoCommand implements CLICommand {
 		AppConfig.timestampedStandardPrint("LocalStorage: " + LocalStorage.storage);
 		AppConfig.timestampedStandardPrint("LocalRoot: " + LocalRoot.workingRoot);
 		AppConfig.timestampedStandardPrint("LastModified: " + TellPullHandler.lastModifiedTimeFiles);
-		AppConfig.timestampedStandardPrint("DHTFILES: " + DHTFiles.dhtFiles);
+		//AppConfig.timestampedStandardPrint("DHTFILES: " + DHTFiles.dhtFiles);
 
 
 	}

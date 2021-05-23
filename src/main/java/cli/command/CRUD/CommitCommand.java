@@ -58,9 +58,6 @@ public class CommitCommand implements CLICommand {
 
 
                             key=HashFile.hashFileName(a.toFile().getName().substring(0,a.toFile().getName().indexOf(".")-1)+".txt");
-//                            DHTFiles.dhtFiles.entrySet().stream().filter(
-//                                    t-> t.getValue().stream().iterator().next().getName().contains(a.toFile().getName())
-//                            ).forEach(o->{key=o.getKey().getRandNumber();});
 
                             //uzima odgovarajucu verziju takve datoteke
                             LocalRoot.workingRoot.stream().filter(
