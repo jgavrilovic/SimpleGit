@@ -14,13 +14,32 @@ public class CommitMessage extends BasicMessage {
     private static final long serialVersionUID = -2144883641345474574L;
     private int senderID;
     private int target;
-    private GitFile gitFile;
 
-    public CommitMessage(int senderPort, int receiverPort, GitFile gitFile, int senderID ,int target) {
+    private String nameOfFile;
+    private String contentOfFile;
+    private int version;
+
+
+    public CommitMessage(int senderPort, int receiverPort, String nameOfFile,String contentOfFile,int version, int senderID ,int target) {
         super(MessageType.COMMIT, senderPort, receiverPort);
-        this.gitFile=gitFile;
+        this.nameOfFile=nameOfFile;
+        this.contentOfFile=contentOfFile;
+        this.version=version;
         this.senderID=senderID;
         this.target=target;
     }
 
+    public CommitMessage(int senderPort, int receiverPort, String textMessage, String nameOfFile,String contentOfFile,int version, int senderID ,int target) {
+        super(MessageType.COMMIT, senderPort, receiverPort,textMessage);
+        this.nameOfFile=nameOfFile;
+        this.contentOfFile=contentOfFile;
+        this.version=version;
+        this.senderID=senderID;
+        this.target=target;
+    }
+
+    @Override
+    public String toString() {
+        return "CommitMessage{" + ", name " + nameOfFile + '\'' + ", content " + contentOfFile + '\'' + ", version " + version + '}';
+    }
 }

@@ -9,14 +9,7 @@ import servent.message.util.MessageUtil;
 
 public class ViewConflictCommand implements CLICommand {
 
-    /**
-     *
-     * posaljem @ConflictMessage biraj opcije, null
-     * vrati mi view - posaljem komanda view, gitgile()
-     * vrati mi push - posaljem DONE_PUSH, null ->upisem njegovu
-     * vrati mi pull - posaljem DONE_Pull, gitfile() -> update
-     *
-     * */
+
 
     @Override
     public String commandName() {
@@ -28,11 +21,10 @@ public class ViewConflictCommand implements CLICommand {
     public void execute(String args) {
         ConflictMessage conflictMessage = new ConflictMessage(
                 AppConfig.myServentInfo.getListenerPort(),
-                AppConfig.chordState.getNextNodeForKey(ConflictHandler.fromTO).getListenerPort(),
-                ConflictType.DONE_PULL,
-                null,
+                AppConfig.chordState.getNextNodeForKey(ConflictHandler.target).getListenerPort(),
+                ConflictType.VIEW,
                 AppConfig.myServentInfo.getChordId(),
-                ConflictHandler.fromTO);
+                ConflictHandler.target);
         MessageUtil.sendMessage(conflictMessage);
     }
 }

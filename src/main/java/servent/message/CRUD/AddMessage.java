@@ -1,41 +1,33 @@
 package servent.message.CRUD;
 
 
+import lombok.Getter;
 import servent.message.BasicMessage;
 import servent.message.MessageType;
 
 import java.io.File;
 import java.nio.file.Path;
 
+@Getter
 public class AddMessage extends BasicMessage {
 
 
     private static final long serialVersionUID = 8579457735906956418L;
-    private String path;
-
-
 
     private int sender;
     private int target;
 
-    private File file;
+    private String nameOfFile;
+    private String contentOfFile;
 
-    public AddMessage(int senderPort, int receiverPort, File file, int sender, int target) {
+    public AddMessage(int senderPort, int receiverPort, String nameOfFile, String contentOfFile, int sender, int target) {
         super(MessageType.ADD_GITFILE, senderPort, receiverPort);
 
-        this.file=file;
+        this.nameOfFile=nameOfFile;
+        this.contentOfFile=contentOfFile;
+
         this.sender=sender;
         this.target=target;
     }
-    public int getSender() {
-        return sender;
-    }
 
-    public int getTarget() {
-        return target;
-    }
-
-    public File getFile() {
-        return file;
-    }
 }

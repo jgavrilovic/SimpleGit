@@ -6,17 +6,16 @@ import file.DHTFiles;
 import file.GitFile;
 import file.GitKey;
 import file.LocalStorage;
-import org.apache.commons.io.FileUtils;
 import servent.handler.MessageHandler;
 import servent.message.CRUD.AddMessage;
+import servent.message.CRUD.UpdateDHTMessage;
 import servent.message.Message;
 import servent.message.MessageType;
-import servent.message.CRUD.UpdateDHTMessage;
 import servent.message.util.MessageUtil;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,47 +29,64 @@ public class AddHandler implements MessageHandler {
     }
 
 
-    /**ovde moras da dobijes ime fajla i sadrzinu njegovu txt*/
     @Override
     public void run() {
         if (clientMessage.getMessageType() == MessageType.ADD_GITFILE) {
+
             ArrayList<GitFile> templist= new ArrayList<>();
-            int sender = ((AddMessage)clientMessage).getSender();
             int key = ((AddMessage)clientMessage).getTarget();
+
+            //provera da li sam ja kranji cvor , ili dalje prosledjujem poruku
             if (AppConfig.chordState.isKeyMine(key)) {
                 try {
-                    File f = ((AddMessage)clientMessage).getFile();
+                    //citam ime i sadrzinu fajla
+                    String nameFile = ((AddMessage)clientMessage).getNameOfFile();
+                    String contentFile = ((AddMessage)clientMessage).getContentOfFile();
 
-                    String filePath1 = f.getPath().substring(f.getPath().indexOf("localRoot")).substring(10);
-                    String filePath2 = AppConfig.myServentInfo.getStoragePath()+"\\"+filePath1;
-                    String[] filePath3 = filePath2.split("\\\\");
-                    String dirs="";
-                    String name = "";
-                    for(int i =0 ; i<filePath3.length;i++){
-                        if(i<filePath3.length-1){
-                            dirs=dirs+filePath3[i]+"\\";
-                        }else{
-                            name=filePath3[i].substring(0,filePath3[i].length()-4)+"0.txt";
-                        }
+                    //ime fajla se cuvao kao ime + verzija
+                    nameFile=nameFile.substring(0,nameFile.length()-4)+"0.txt";
 
+                    //odvajam putanju do direkorijuma od putanje do fajla
+                    String fullpath = AppConfig.myServentInfo.getStoragePath()+"/"+nameFile;
+                    String[] arrayFullpath = fullpath.split("\\\\");
+                    StringBuilder dirs= new StringBuilder();
+
+                    for(int i=0;i<arrayFullpath.length-1;i++){
+                        dirs.append(arrayFullpath[i]).append("/");
                     }
-                    //pravimo dir
-                    boolean b =new File(dirs).mkdirs();
-                    AppConfig.timestampedStandardPrint("premesten direktorijum: " + b);
 
-                    //premestamo fileove
-                    AppConfig.timestampedStandardPrint(dirs+"  " + name + "   " +  dirs+name);
+                    //pravim foldere
+                    boolean a = new File(dirs.toString()).mkdirs();
+                    if(a){
+                        AppConfig.timestampedStandardPrint("Uspesno kreirani folderi do fajla");
+                    }else{
+                        AppConfig.timestampedStandardPrint("Folder vec postoji!");
+                    }
 
-                    Files.move(Paths.get(f.getAbsolutePath()), Paths.get(dirs+name));
+                    //pravim fajl
+                    File f = new File(fullpath);
+                    if(f.isFile()){
+                        boolean b  = f.createNewFile();
+                        AppConfig.timestampedStandardPrint("Potvrda da je file uspesno kreidan: " +b);
+                    }
 
-                    File ff = new File(dirs+name);
+                    //upisujem sadrzinu fajla u novi fajl
+                    try {
+                        FileWriter myWriter = new FileWriter(f);
+                        myWriter.write(contentFile);
+                        myWriter.close();
+                        AppConfig.timestampedStandardPrint("Uspeno upisivanje sadrzaja u fajl");
+                    } catch (IOException e) {
+                        AppConfig.timestampedErrorPrint("Doslo je do greske pri upisivanju");
+                        e.printStackTrace();
+                    }
 
-                    FileUtils.copyFile(ff, new File(f.getPath()));
+                    //dodajem gitfile(name,verzija) u storage
+                    GitFile gitFile = new GitFile(f.getPath());
+                    LocalStorage.storage.add(gitFile);
 
-                    templist.add(new GitFile(name,ff,0));
-                    LocalStorage.storage.add(new GitFile(name,ff,0));
-
-
+                    //dodajem gitfile u DHT tabelu!
+                    templist.add(gitFile);
                     if(!DHTFiles.dhtFiles.containsKey(new GitKey(AppConfig.myServentInfo.getChordId()))){
                         DHTFiles.dhtFiles.put(new GitKey(AppConfig.myServentInfo.getChordId()), new ArrayList<>(templist));
                     }else {
@@ -82,25 +98,23 @@ public class AddHandler implements MessageHandler {
                     }
 
 
-                    UpdateDHTMessage updateDHTMessage = new UpdateDHTMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodePort(),
-                            new GitFile(name,ff,0), AppConfig.myServentInfo.getChordId());
-                    MessageUtil.sendMessage(updateDHTMessage);
                 }catch (Exception e){
+                    AppConfig.timestampedErrorPrint("Doslo je do greske: ");
                     e.printStackTrace();
                 }
 
 
             } else {
-
                 ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(key);
                 AddMessage addm = new AddMessage(
                         clientMessage.getSenderPort(), nextNode.getListenerPort(),
-                        ((AddMessage)clientMessage).getFile(),((AddMessage) clientMessage).getSender(),key
+                        ((AddMessage)clientMessage).getNameOfFile(),((AddMessage)clientMessage).getContentOfFile(),
+                        ((AddMessage) clientMessage).getSender(),key
                 );
                 MessageUtil.sendMessage(addm);
             }
         } else {
-            AppConfig.timestampedErrorPrint("Add handler got a message that is not ADDFILE");
+            AppConfig.timestampedErrorPrint("Add handler je prihvatio poruku :" + clientMessage.getMessageType() +" GRESKA!");
         }
 
     }

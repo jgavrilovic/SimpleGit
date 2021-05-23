@@ -7,16 +7,10 @@ import servent.message.CRUD.ConflictMessage;
 import servent.message.CRUD.ConflictType;
 import servent.message.util.MessageUtil;
 
-public class PushConflictCommand implements CLICommand {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    /**
-     *
-     * posaljem @ConflictMessage biraj opcije, null
-     * vrati mi view - posaljem komanda view, gitgile()
-     * vrati mi push - posaljem DONE_PUSH, null ->upisem njegovu
-     * vrati mi pull - posaljem DONE_Pull, gitfile() -> update
-     *
-     * */
+public class PushConflictCommand implements CLICommand {
 
     @Override
     public String commandName() {
@@ -26,13 +20,24 @@ public class PushConflictCommand implements CLICommand {
 
     @Override
     public void execute(String args) {
+
+        AppConfig.timestampedErrorPrint(ConflictHandler.fileProblem);
+        Pattern p = Pattern.compile("[0-9]");
+        String path = ConflictHandler.fileProblem.substring(ConflictHandler.fileProblem.indexOf("localRoot")+10);
+        Matcher m = p.matcher(path);
+        m.find();
+        int a = Integer.parseInt(m.group());
+
+        String content = AddCommand.fileReader(AppConfig.myServentInfo.getRootPath()+"/"+path.replaceAll("[0-9]",a-1+""));
+        AppConfig.timestampedErrorPrint("PUSH: " + content);
         ConflictMessage conflictMessage = new ConflictMessage(
                 AppConfig.myServentInfo.getListenerPort(),
-                AppConfig.chordState.getNextNodeForKey(ConflictHandler.fromTO).getListenerPort(),
-                ConflictType.DONE_PUSH,
-                null,
+                AppConfig.chordState.getNextNodeForKey(ConflictHandler.target).getListenerPort(),
+                ConflictHandler.fileProblem,
+                content,
+                ConflictType.PUSH,
                 AppConfig.myServentInfo.getChordId(),
-                ConflictHandler.fromTO);
+                ConflictHandler.target);
         MessageUtil.sendMessage(conflictMessage);
     }
 }
