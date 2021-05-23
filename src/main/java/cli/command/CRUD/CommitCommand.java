@@ -4,29 +4,19 @@ import app.AppConfig;
 import cli.command.CLICommand;
 import file.DHTFiles;
 import file.GitFile;
-import file.GitKey;
+import file.HashFile;
 import file.LocalRoot;
-import servent.handler.TellPullHandler;
-import servent.message.CommitMessage;
+import servent.handler.CRUD.TellPullHandler;
+import servent.message.CRUD.CommitMessage;
 import servent.message.util.MessageUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CommitCommand implements CLICommand {
 
-
-    /** TODO
-        * commit name - Osvežava datoteku name u sistemu za verzioniranje i povećava verziju.
-        * Sve datoteke kreću sa verzijom 0, i pri commit operaciji se verzija datoteke inkrementira.
-        * Kao name može da se navede i direktorijum, u kojem slučaju se vrši commit operacija rekurzivno za čitav direktorijum.
-        * Ako datoteka nije menjana od prethodne verzije, ne treba joj menjati verziju pri commit-ovanju.
-        * Ako je datoteka već ažurirana od strane nekog drugog čvora, tj. došlo je do konflikta, pitati korisnika kako želi da razreši konflikt
-    * */
 
     @Override
     public String commandName() {
@@ -35,7 +25,8 @@ public class CommitCommand implements CLICommand {
 
 
     @Override
-    public void execute(String args) {
+    public void execute(String args)  {
+        //odvajam naziv datoteke
         String fullPath;
         if(args!=null){
             fullPath = AppConfig.myServentInfo.getRootPath()+"/"+args;
@@ -46,54 +37,59 @@ public class CommitCommand implements CLICommand {
 
         if(fullPath.contains(".txt")){
             AppConfig.timestampedStandardPrint("komituje se file " + fullPath);
-            File myFile = new File(fullPath);
-            sendCommitMessage(myFile);
+            sendCommitMessage(fullPath);
         }else{
             AppConfig.timestampedStandardPrint("komituje se dir: " + fullPath);
-
-            try {
-                Files.walk(Paths.get(fullPath))
-                        .filter(Files::isRegularFile)
-                        .forEach(a->{
-                            File myFile = new File(a.toFile().getPath());
-                            sendCommitMessage(myFile);
-                        });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            sendCommitMessage(fullPath);
         }
     }
 
 
     private int key=0;
-    private void sendCommitMessage(File myFile) {
-        LocalRoot.workingRoot.stream().filter(x->x.getFile().getPath().equals(myFile.getPath())).forEach(f->{
-            TellPullHandler.lastModifiedTimeFiles.entrySet().stream().filter(x-> x.getKey().getPath().equals(f.getFile().getPath())).forEach(fs->{
-                AppConfig.timestampedStandardPrint(fs.getValue()+"   "+f.getFile().lastModified());
-                if(fs.getValue()==f.getFile().lastModified()){
+    private void sendCommitMessage(String  fullPath) {
+        AtomicInteger ver = new AtomicInteger(0);
+        try {
+            //prolazi kroz radni koren
+            Files.walk(Paths.get(fullPath))
+                    .filter(Files::isRegularFile)
+                    .forEach(a->{
+                        //proverava da li je datoteka menjana
+                        TellPullHandler.lastModifiedTimeFiles.entrySet().stream().filter(x-> x.getKey().getPath().equals(a.toFile().getPath())).forEach(fs->{
 
-                    DHTFiles.dhtFiles.entrySet().stream().filter(
-                            t-> t.getValue().stream().iterator().next().getName().equals(myFile.getName())
-                    ).forEach(o->{key=o.getKey().getRandNumber();});
-                    AppConfig.timestampedStandardPrint(key+"if");
-                    CommitMessage msg = new CommitMessage(
-                            AppConfig.myServentInfo.getListenerPort(),
-                            AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
-                            new GitFile(f.getName(),f.getFile(),f.getVersion()),key);
-                    MessageUtil.sendMessage(msg);
-                }else {//+1
 
-                    DHTFiles.dhtFiles.entrySet().stream().filter(
-                            t-> t.getValue().stream().iterator().next().getName().equals(myFile.getName())
-                    ).forEach(o->{key=o.getKey().getRandNumber();});
-                    AppConfig.timestampedStandardPrint(key+"else");
-                    CommitMessage msg = new CommitMessage(
-                            AppConfig.myServentInfo.getListenerPort(),
-                            AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
-                            new GitFile(f.getName(),f.getFile(),f.getVersion()+1),key);
-                    MessageUtil.sendMessage(msg);
-                }
-            });
-        });
+                            key=HashFile.hashFileName(a.toFile().getName().substring(0,a.toFile().getName().indexOf(".")-1)+".txt");
+
+                            //uzima odgovarajucu verziju takve datoteke
+                            LocalRoot.workingRoot.stream().filter(
+                                    t->t.getName().equals(a.toFile().getPath())).forEach(o->{
+                                ver.set(o.getVersion());
+                            });
+
+                            //salje se poruka sa odgovarajucom verzijom
+                            if(fs.getValue()==a.toFile().lastModified()){
+                                CommitMessage msg = new CommitMessage(
+                                        AppConfig.myServentInfo.getListenerPort(),
+                                        AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
+                                        a.toFile().getPath(),
+                                        AddCommand.fileReader(a.toFile().getPath()),
+                                        ver.get(),
+                                        AppConfig.myServentInfo.getChordId(),key);
+                                MessageUtil.sendMessage(msg);
+                            }else {
+                                ver.getAndIncrement();
+                                CommitMessage msg = new CommitMessage(
+                                        AppConfig.myServentInfo.getListenerPort(),
+                                        AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
+                                        a.toFile().getPath(),
+                                        AddCommand.fileReader(a.toFile().getPath()),
+                                        ver.get(),
+                                        AppConfig.myServentInfo.getChordId(),key);
+                                MessageUtil.sendMessage(msg);
+                            }
+                        });
+                    });
+        } catch (IOException e) {
+            AppConfig.timestampedErrorPrint("Takva datoteka ne postoji!");
+        }
     }
 }

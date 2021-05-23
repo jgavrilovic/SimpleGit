@@ -33,10 +33,10 @@ public class ReadFileTest {
     public static void main(String[] args) {
         //
 
-        String gitFile = "src\\main\\resources\\servent0\\localRoot\\a1.txt";
+        String gitFile = "src\\main\\resources\\servent1\\localStorage\\a0.txt";
 
-        String path = gitFile.substring(0,gitFile.length()-5)+1+".txt";
-        path =path.replace(path.substring(0,path.indexOf("localRoot")+9), "src/main/resources/servent1/localStorage");
-        System.out.println(path);
+        String[] path = gitFile.split("\\\\");
+
+        System.out.println(path.length);
     }
 }

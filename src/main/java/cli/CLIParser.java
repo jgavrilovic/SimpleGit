@@ -3,9 +3,7 @@ package cli;
 import app.AppConfig;
 import app.Cancellable;
 import cli.command.*;
-import cli.command.CRUD.AddCommand;
-import cli.command.CRUD.CommitCommand;
-import cli.command.CRUD.PullCommand;
+import cli.command.CRUD.*;
 import servent.SimpleServentListener;
 
 import java.util.ArrayList;
@@ -31,9 +29,15 @@ public class CLIParser implements Runnable, Cancellable {
 
 		commandList.add(new NodeQuitCommand());
 		commandList.add(new PingCommand());
+
+
 		commandList.add(new AddCommand());
 		commandList.add(new PullCommand());
 		commandList.add(new CommitCommand());
+		commandList.add(new PullConflictCommand());
+		commandList.add(new PushConflictCommand());
+		commandList.add(new ViewConflictCommand());
+		commandList.add(new RemoveCommand());
 	}
 	
 	@Override

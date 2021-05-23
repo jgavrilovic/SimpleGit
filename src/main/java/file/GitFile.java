@@ -11,18 +11,15 @@ public class GitFile implements Serializable {
 
     private static final long serialVersionUID = -1490336670619402477L;
     private String name;
-    private File file;
     private int version;
 
-    public GitFile(String name,File file) {
+    public GitFile(String name) {
         this.name = name;
-        this.file=file;
         this.version = 0;
     }
 
-    public GitFile(String name, File file, int version) {
+    public GitFile(String name, int version) {
         this.name = name;
-        this.file=file;
         this.version = version;
     }
 }

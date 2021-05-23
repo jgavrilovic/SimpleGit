@@ -1,6 +1,8 @@
-package servent.message;
+package servent.message.START;
 
 import app.ServentInfo;
+import servent.message.BasicMessage;
+import servent.message.MessageType;
 
 import java.util.Map;
 

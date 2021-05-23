@@ -1,4 +1,7 @@
-package servent.message;
+package servent.message.CRUD;
+
+import servent.message.BasicMessage;
+import servent.message.MessageType;
 
 public class AskPullMessage extends BasicMessage {
 

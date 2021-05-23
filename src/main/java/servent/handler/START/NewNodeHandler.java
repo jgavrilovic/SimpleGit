@@ -1,11 +1,14 @@
-package servent.handler;
+package servent.handler.START;
 
 import app.AppConfig;
 import app.ServentInfo;
+import servent.handler.MessageHandler;
 import servent.message.*;
+import servent.message.START.NewNodeMessage;
+import servent.message.START.SorryMessage;
+import servent.message.START.WelcomeMessage;
 import servent.message.util.MessageUtil;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;

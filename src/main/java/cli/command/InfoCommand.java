@@ -4,7 +4,7 @@ import app.AppConfig;
 import file.DHTFiles;
 import file.LocalRoot;
 import file.LocalStorage;
-import servent.handler.TellPullHandler;
+import servent.handler.CRUD.TellPullHandler;
 
 public class InfoCommand implements CLICommand {
 
@@ -20,7 +20,7 @@ public class InfoCommand implements CLICommand {
 		AppConfig.timestampedStandardPrint("LocalStorage: " + LocalStorage.storage);
 		AppConfig.timestampedStandardPrint("LocalRoot: " + LocalRoot.workingRoot);
 		AppConfig.timestampedStandardPrint("LastModified: " + TellPullHandler.lastModifiedTimeFiles);
-		AppConfig.timestampedStandardPrint("DHTFILES: " + DHTFiles.dhtFiles);
+		//AppConfig.timestampedStandardPrint("DHTFILES: " + DHTFiles.dhtFiles);
 
 
 	}
