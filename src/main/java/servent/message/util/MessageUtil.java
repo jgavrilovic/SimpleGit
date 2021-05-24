@@ -2,13 +2,12 @@ package servent.message.util;
 
 import app.AppConfig;
 import servent.message.*;
+import servent.message.FAILURE.PongMessage;
+import servent.message.FAILURE.PongType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

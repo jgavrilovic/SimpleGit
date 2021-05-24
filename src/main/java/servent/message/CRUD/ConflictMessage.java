@@ -1,6 +1,6 @@
 package servent.message.CRUD;
 
-import file.GitFile;
+
 import lombok.Getter;
 import servent.message.BasicMessage;
 import servent.message.MessageType;
@@ -11,10 +11,8 @@ public class ConflictMessage extends BasicMessage {
 
     private static final long serialVersionUID = -7368203647999743745L;
     private ConflictType conflictType;
-
     private int senderID;
     private int target;
-
     private String name;
     private String content;
     private int version;

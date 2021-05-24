@@ -1,2 +1,27 @@
-15:02:20 - Starting servent [4|localhost|1300]
-15:02:20 - Pausing for 30000 ms
+16:25:50 - Starting servent ServentInfo{ipAddress='localhost', listenerPort=1300, chordId=4, rootPath='src/main/resources/servent2/localRoot', storagePath='src/main/resources/servent2/localStorage', weekLimit=1000, strongLimit=10000, teamName='"c"', teamLimit=1}
+16:25:50 - Pausing for 30000 ms
+16:25:51 - Sending message [4|1300|0||NEW_NODE|1100|28]
+16:25:53 - Got message [28|1100|3||WELCOME|1300|4]
+16:25:54 - Sending message [4|1300|1||UPDATE|1100|28]
+16:25:56 - Got message [4|1300|3|1100,1200|UPDATE|1300|4]
+16:25:57 - Sending message TeamMessage{teamID=4, teamLetter='"c"', originalSender=4, teams={"c"=[4]}}
+16:25:59 - Got message TeamMessage{teamID=4, teamLetter='"c"', originalSender=4, teams={"c"=[4], "b"=[48], "a"=[28]}}
+16:26:02 - Got message [24|1400|0||NEW_NODE|1300|4]
+16:26:03 - Sending message [24|1400|3||NEW_NODE|1100|28]
+16:26:07 - Got message [24|1400|5|1100,1200|UPDATE|1300|4]
+16:26:08 - Sending message [24|1400|4|1100,1200,1300|UPDATE|1400|24]
+16:26:10 - Got message TeamMessage{teamID=24, teamLetter='"b"', originalSender=24, teams={"c"=[4], "b"=[48, 24], "a"=[28]}}
+16:26:11 - Got message [0|1600|0||NEW_NODE|1300|4]
+16:26:12 - Sending message TeamMessage{teamID=24, teamLetter='"b"', originalSender=24, teams={"c"=[4], "b"=[48, 24], "a"=[28]}}
+16:26:12 - Sending message [4|1300|6||WELCOME|1600|0]
+16:26:13 - Got message [0|1600|1||UPDATE|1300|4]
+16:26:14 - Sending message [0|1600|7|1300|UPDATE|1400|24]
+16:26:18 - Got message TeamMessage{teamID=0, teamLetter='"a"', originalSender=0, teams={"a"=[0]}}
+16:26:19 - Sending message TeamMessage{teamID=0, teamLetter='"a"', originalSender=0, teams={"c"=[4], "b"=[48, 24], "a"=[0, 28]}}
+16:26:20 - Pausing for 10000 ms
+16:26:30 - My info: ServentInfo{ipAddress='localhost', listenerPort=1300, chordId=4, rootPath='src/main/resources/servent2/localRoot', storagePath='src/main/resources/servent2/localStorage', weekLimit=1000, strongLimit=10000, teamName='"c"', teamLimit=1}
+16:26:30 - LocalStorage: []
+16:26:30 - LocalRoot: []
+16:26:30 - LastModified: {}
+16:26:30 - LocalTeams: {"c"=[4], "b"=[48, 24], "a"=[0, 28]}
+16:26:30 - Stopping...

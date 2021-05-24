@@ -13,33 +13,33 @@ public class ServentInitializer implements Runnable {
 
 	private int getSomeServentPort() {
 		int bsPort = AppConfig.BOOTSTRAP_PORT;
-		
+
 		int retVal = -2;
-		
+
 		try {
 			Socket bsSocket = new Socket("localhost", bsPort);
-			
+
 			PrintWriter bsWriter = new PrintWriter(bsSocket.getOutputStream());
 			bsWriter.write("Hail\n" + AppConfig.myServentInfo.getListenerPort() + "\n");
 			bsWriter.flush();
-			
+
 			Scanner bsScanner = new Scanner(bsSocket.getInputStream());
 			retVal = bsScanner.nextInt();
-			
+
 			bsSocket.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return retVal;
 	}
-	
+
 	@Override
 	public void run() {
 		int someServentPort = getSomeServentPort();
-		
+
 		if (someServentPort == -2) {
 			AppConfig.timestampedErrorPrint("Error in contacting bootstrap. Exiting...");
 			System.exit(0);

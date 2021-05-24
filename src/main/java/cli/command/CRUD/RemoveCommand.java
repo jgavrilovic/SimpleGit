@@ -8,22 +8,16 @@ import servent.message.util.MessageUtil;
 
 public class RemoveCommand  implements CLICommand {
 
-
-
     @Override
     public String commandName() {
         return "remove";
     }
 
-
     @Override
     public void execute(String args) {
-
         //izvucem iz argumenta ime trazene datoteke file/dir
-        String fullPath=args;
-
         //hashiram po punoj putanji
-        String fullpath1= fullPath.replaceAll("\\d\\.",".");
+        String fullpath1= args.replaceAll("\\d\\.",".");
         AppConfig.timestampedStandardPrint(fullpath1);
         int destination = HashFile.hashFileName(fullpath1);
 
@@ -31,7 +25,7 @@ public class RemoveCommand  implements CLICommand {
         RemoveMessage removeMessage = new RemoveMessage(
                 AppConfig.myServentInfo.getListenerPort(),
                 AppConfig.chordState.getNextNodeForKey(destination).getListenerPort(),
-                args,
+                fullpath1,
                 AppConfig.myServentInfo.getChordId(),
                 destination);
         MessageUtil.sendMessage(removeMessage);

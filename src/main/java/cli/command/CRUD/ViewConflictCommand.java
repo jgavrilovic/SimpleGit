@@ -9,13 +9,10 @@ import servent.message.util.MessageUtil;
 
 public class ViewConflictCommand implements CLICommand {
 
-
-
     @Override
     public String commandName() {
         return "view-conflict";
     }
-
 
     @Override
     public void execute(String args) {

@@ -3,12 +3,15 @@ package servent.handler.START;
 import app.AppConfig;
 import app.ServentInfo;
 import servent.handler.MessageHandler;
-import servent.message.*;
+import servent.message.Message;
+import servent.message.MessageType;
 import servent.message.START.NewNodeMessage;
 import servent.message.START.SorryMessage;
 import servent.message.START.WelcomeMessage;
 import servent.message.util.MessageUtil;
+import team.LocalTeam;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,24 +19,24 @@ import java.util.Map.Entry;
 public class NewNodeHandler implements MessageHandler {
 
 	private Message clientMessage;
-	
+
 	public NewNodeHandler(Message clientMessage) {
 		this.clientMessage = clientMessage;
 	}
-	
+
 	@Override
 	public void run() {
 		if (clientMessage.getMessageType() == MessageType.NEW_NODE) {
 			int newNodePort = clientMessage.getSenderPort();
 			ServentInfo newNodeInfo = new ServentInfo("localhost", newNodePort);
-			
+
 			//check if the new node collides with another existing node.
 			if (AppConfig.chordState.isCollision(newNodeInfo.getChordId())) {
 				Message sry = new SorryMessage(AppConfig.myServentInfo.getListenerPort(), clientMessage.getSenderPort());
 				MessageUtil.sendMessage(sry);
 				return;
 			}
-			
+
 			//check if he is my predecessor
 			boolean isMyPred = AppConfig.chordState.isKeyMine(newNodeInfo.getChordId());
 			if (isMyPred) { //if yes, prepare and send welcome message
@@ -41,16 +44,16 @@ public class NewNodeHandler implements MessageHandler {
 				if (hisPred == null) {
 					hisPred = AppConfig.myServentInfo;
 				}
-				
+
 				AppConfig.chordState.setPredecessor(newNodeInfo);
-				
+
 				Map<Integer, Integer> myValues = AppConfig.chordState.getValueMap();
 				Map<Integer, Integer> hisValues = new HashMap<>();
-				
+
 				int myId = AppConfig.myServentInfo.getChordId();
 				int hisPredId = hisPred.getChordId();
 				int newNodeId = newNodeInfo.getChordId();
-				
+
 				for (Entry<Integer, Integer> valueEntry : myValues.entrySet()) {
 					if (hisPredId == myId) { //i am first and he is second
 						if (myId < newNodeId) {
@@ -77,25 +80,25 @@ public class NewNodeHandler implements MessageHandler {
 								hisValues.put(valueEntry.getKey(), valueEntry.getValue());
 							}
 						}
-						
+
 					}
-					
+
 				}
 
 				for (Integer key : hisValues.keySet()) { //remove his values from my map
 					myValues.remove(key);
 				}
 				AppConfig.chordState.setValueMap(myValues);
-				
+
+
 				WelcomeMessage wm = new WelcomeMessage(AppConfig.myServentInfo.getListenerPort(), newNodePort, hisValues);
-				AppConfig.timestampedErrorPrint("NEW NODE: " + hisValues);
 				MessageUtil.sendMessage(wm);
 			} else { //if he is not my predecessor, let someone else take care of it
 				ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(newNodeInfo.getChordId());
 				NewNodeMessage nnm = new NewNodeMessage(newNodePort, nextNode.getListenerPort());
 				MessageUtil.sendMessage(nnm);
 			}
-			
+
 		} else {
 			AppConfig.timestampedErrorPrint("NEW_NODE handler got something that is not new node message.");
 		}

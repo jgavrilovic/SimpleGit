@@ -8,11 +8,11 @@ import servent.message.MessageType;
 public class SorryHandler implements MessageHandler {
 
 	private Message clientMessage;
-	
+
 	public SorryHandler(Message clientMessage) {
 		this.clientMessage = clientMessage;
 	}
-	
+
 	@Override
 	public void run() {
 		if (clientMessage.getMessageType() == MessageType.SORRY) {

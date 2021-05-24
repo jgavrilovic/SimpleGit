@@ -3,7 +3,8 @@ package servent.handler.START;
 import app.AppConfig;
 import app.ServentInfo;
 import servent.handler.MessageHandler;
-import servent.message.*;
+import servent.message.Message;
+import servent.message.MessageType;
 import servent.message.START.NodeQuitMessage;
 import servent.message.util.MessageUtil;
 
@@ -15,27 +16,10 @@ public class NodeQuitHandler implements MessageHandler {
 
     private Message clientMessage;
     private boolean flag = true;
-    public static Set<Message> receivedQuit = Collections.newSetFromMap(new ConcurrentHashMap<Message, Boolean>());
+    public static Set<Message> receivedQuit = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public NodeQuitHandler(Message clientMessage) {
         this.clientMessage = clientMessage;
     }
-
-    /**
-     * Ako sam ja prvo koji dobija poruku:
-     *      -Preuzimam njegovu tabelu podataka
-     *      -Preuzimam za koje cvorove je bio odgovoran
-     *      -Preuzimam njegovog prethodnika
-     *      -updatetujem succsesor tabelu
-     *
-     * Ako sam ja bilo ko drugi:
-     *      -updatetujem succsesor tabelu
-     *
-     * Ako sam ja taj koji se brise:
-     *      -Dobijam nazad update poruku(izvrteo se krug)
-     *      -Ugasim se
-     *
-     * */
-    //successor_info
 
     @Override
     public void run() {
@@ -53,7 +37,6 @@ public class NodeQuitHandler implements MessageHandler {
                         flag=false;
                     }
 
-
                     //port - id - port(mog prethodnika)
                     String msgTxt = clientMessage.getMessageText();
                     int port = Integer.parseInt(msgTxt.split(" ")[0]);
@@ -64,29 +47,21 @@ public class NodeQuitHandler implements MessageHandler {
 
                     //prvi sam koji je dobio poruku
                     if(AppConfig.chordState.getPredecessor().getChordId()==id){
-                        AppConfig.timestampedErrorPrint("usao1");
                         AppConfig.chordState.getValueMap().putAll(clientMessage.getValueMap());
                         AppConfig.chordState.removeNodes(info);
                         AppConfig.chordState.setPredecessor(infoPred);
                     }else{
-                        AppConfig.timestampedErrorPrint("usao2");
                         AppConfig.chordState.removeNodes(info);
                     }
 
 
                     if(AppConfig.myServentInfo.getChordId()==id){
-                        AppConfig.timestampedErrorPrint("usao3");
                         System.exit(0);
                     }
-
-
 
                 } else {
                     AppConfig.timestampedStandardPrint("Already had this. No rebroadcast.");
                 }
-
-
-
 
             }catch (Exception e){
                 e.printStackTrace();

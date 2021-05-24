@@ -6,7 +6,9 @@ import servent.handler.MessageHandler;
 import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.START.UpdateMessage;
+import servent.message.TEAM_ORG.TeamMessage;
 import servent.message.util.MessageUtil;
+import team.LocalTeam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +16,11 @@ import java.util.List;
 public class UpdateHandler implements MessageHandler {
 
 	private Message clientMessage;
-	
+
 	public UpdateHandler(Message clientMessage) {
 		this.clientMessage = clientMessage;
 	}
-	
+
 	@Override
 	public void run() {
 		if (clientMessage.getMessageType() == MessageType.UPDATE) {
@@ -26,7 +28,7 @@ public class UpdateHandler implements MessageHandler {
 				ServentInfo newNodInfo = new ServentInfo("localhost", clientMessage.getSenderPort());
 				List<ServentInfo> newNodes = new ArrayList<>();
 				newNodes.add(newNodInfo);
-				
+
 				AppConfig.chordState.addNodes(newNodes);
 				String newMessageText = "";
 				if (clientMessage.getMessageText().equals("")) {
@@ -38,9 +40,17 @@ public class UpdateHandler implements MessageHandler {
 						newMessageText);
 				MessageUtil.sendMessage(nextUpdate);
 			} else {
+				TeamMessage teamMessage = new TeamMessage(
+						AppConfig.myServentInfo.getListenerPort(),
+						AppConfig.chordState.getNextNodePort(),
+						AppConfig.myServentInfo.getChordId(),
+						AppConfig.myServentInfo.getTeamName(),
+						AppConfig.myServentInfo.getChordId(),LocalTeam.teams);
+				MessageUtil.sendMessage(teamMessage);
+
 				String messageText = clientMessage.getMessageText();
 				String[] ports = messageText.split(",");
-				
+
 				List<ServentInfo> allNodes = new ArrayList<>();
 				for (String port : ports) {
 					allNodes.add(new ServentInfo("localhost", Integer.parseInt(port)));

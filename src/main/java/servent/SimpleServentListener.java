@@ -4,7 +4,12 @@ import app.AppConfig;
 import app.Cancellable;
 import servent.handler.*;
 import servent.handler.CRUD.*;
+import servent.handler.FAILURE.PingHandler1;
+import servent.handler.FAILURE.PongHandler1;
 import servent.handler.START.*;
+import servent.handler.TEAM_COMM.TeamInfoHandler;
+import servent.handler.TEAM_COMM.TellPullTeamHandler;
+import servent.handler.TEAM_ORG.TeamHandler;
 import servent.message.Message;
 import servent.message.util.MessageUtil;
 
@@ -97,15 +102,17 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					case PONG:
 						messageHandler = new PongHandler1(clientMessage);
 						break;
-					case PUT:
-						messageHandler = new PutHandler(clientMessage);
+				//HANDLER ZA TIMOVE
+					case TEAM_UPDATE:
+						messageHandler = new TeamHandler(clientMessage);
 						break;
-					case ASK_GET:
-						messageHandler = new AskGetHandler(clientMessage);
+					case TELL_PULL_TEAM:
+						messageHandler = new TellPullTeamHandler(clientMessage);
 						break;
-					case TELL_GET:
-						messageHandler = new TellGetHandler(clientMessage);
+					case TEAM_INFO:
+						messageHandler = new TeamInfoHandler(clientMessage);
 						break;
+				//---------------------------
 
 				}
 				
