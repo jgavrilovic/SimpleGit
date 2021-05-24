@@ -28,31 +28,51 @@ public class TellPullHandler  implements MessageHandler {
         if (clientMessage.getMessageType() == MessageType.TELL_PULL) {
             try {
                 //dohvatim naziv i sadrzaj datoteke
-                String fileName = ((TellPullMessage)clientMessage).getNameOfFile();
+
+                String fullpath = ((TellPullMessage)clientMessage).getNameOfFile();  //src/../storage/jovan0.txt | src/.../storage/dir1/b0.txt
                 String fileContent = ((TellPullMessage)clientMessage).getContentOfFile();
-                AppConfig.timestampedStandardPrint(fileName+"");
+                AppConfig.timestampedStandardPrint("Prihvatio naziv fajla: " + fullpath);
 
-                /**TODO ej problem je kada 1 satvi u 2 a 3 povuce iz 2 jer nema vec napravljen dir!*/
+                fullpath=fullpath.substring(fullpath.indexOf("localStorage")).replace("localStorage\\",""); //jovan0.txt || dir1/b0.txt
+                fullpath=AppConfig.myServentInfo.getRootPath()+"/"+fullpath; //src/../root/jovan0.txt | src/.../root/dir1/b0.txt
 
-                //napravim novu datoteku na radnom korenu pod istim nazivom
-                String newPath = fileName.substring(fileName.indexOf("localStorage")).replace("localStorage","");
-                File newf = new File(AppConfig.myServentInfo.getRootPath()+newPath);
-                boolean isCreated = newf.createNewFile();
-                if(isCreated){
-                    AppConfig.timestampedStandardPrint("File je kreiran na vas radni koren: " + newf.getName() + ((TellPullMessage) clientMessage).getVersion());
+                //odvajam putanju do direkorijuma od putanje do fajla
+                AppConfig.timestampedStandardPrint("Nova putanja do fajla za pull handler: " + fullpath);
+                String[] arrayFullpath = fullpath.split("\\\\");
+                StringBuilder dirs= new StringBuilder();
+
+                for(int i=0;i<arrayFullpath.length;i++){
+                    if(i<arrayFullpath.length-1)
+                        dirs.append(arrayFullpath[i]).append("/");
                 }
 
+                //pravim foldere
+                boolean a = new File(dirs.toString()).mkdirs();
+                if(a){
+                    AppConfig.timestampedStandardPrint("Uspesno kreirani folderi do fajla");
+                }else{
+                    AppConfig.timestampedStandardPrint("Folder vec postoji!");
+                }
+
+                //napravim novu datoteku na radnom korenu pod istim nazivom
+                File f = new File(fullpath);
+                if(f.isFile()){
+                    boolean b  = f.createNewFile();
+                    AppConfig.timestampedStandardPrint("Potvrda da je file "+f+" uspesno kreidan: " +b);
+                }
+
+
                 //dodaje se datoteka na radni koren
-                LocalRoot.workingRoot.add(new GitFile(newf.getPath(),((TellPullMessage) clientMessage).getVersion()));
+                LocalRoot.workingRoot.add(new GitFile(f.getName(),f.getPath(),((TellPullMessage) clientMessage).getVersion()));
 
 
                 //prepisem njen sadrzaj u novu datoteku koju sam napravio
-                FileWriter myWriter = new FileWriter(newf);
+                FileWriter myWriter = new FileWriter(f);
                 myWriter.write(fileContent);
                 myWriter.close();
 
-                lastModifiedTimeFiles.put(newf,newf.lastModified());
-                AppConfig.timestampedStandardPrint(fileName+" je dostavljena u vas radni koren!");
+                lastModifiedTimeFiles.put(f,f.lastModified());
+                AppConfig.timestampedStandardPrint(f.getName()+" je dostavljena u vas radni koren!");
 
 
             } catch (FileNotFoundException e) {

@@ -6,7 +6,11 @@ import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.START.UpdateMessage;
 import servent.message.START.WelcomeMessage;
+import servent.message.TeamMessage;
 import servent.message.util.MessageUtil;
+import team.LocalTeam;
+
+import java.util.ArrayList;
 
 public class WelcomeHandler implements MessageHandler {
 

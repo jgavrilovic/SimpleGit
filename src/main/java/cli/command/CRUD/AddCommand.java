@@ -7,6 +7,7 @@ import file.HashFile;
 import file.LocalRoot;
 import servent.message.CRUD.AddMessage;
 import servent.message.util.MessageUtil;
+import team.LocalTeam;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +15,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AddCommand implements CLICommand {
 
@@ -27,7 +30,7 @@ public class AddCommand implements CLICommand {
         //izvucem iz argumenta ime trazene datoteke file/dir
         String fullPath=AppConfig.myServentInfo.getRootPath()+"/"+args;
 
-        //hashiram po punoj putanji
+        //hashiram po nazivu fajla
         int destination = HashFile.hashFileName(args);
 
         //proveravam da li je id moj ili ne i saljem
@@ -66,7 +69,8 @@ public class AddCommand implements CLICommand {
         if(fullPath.contains(".txt")){
             File f = new File(fullPath);
 
-            LocalRoot.workingRoot.add(new GitFile(f.getPath()));
+
+            LocalRoot.workingRoot.add(new GitFile(f.getName(),f.getPath(),0));
 
             if(flag){
                 AddMessage addMsg = new AddMessage(
@@ -78,7 +82,7 @@ public class AddCommand implements CLICommand {
                 Files.walk(Paths.get(fullPath)).filter(Files::isRegularFile).forEach(a->{
 
                     File f = new File(a.toFile().getPath());
-                    LocalRoot.workingRoot.add(new GitFile(f.getPath()));
+                    LocalRoot.workingRoot.add(new GitFile(f.getName(),f.getPath(),0));
 
                     String name = f.getPath().substring(f.getPath().indexOf("localRoot")+10);
                     if(flag) {
@@ -95,3 +99,5 @@ public class AddCommand implements CLICommand {
     }
 
 }
+
+//saljem ili marko.txt ili dir1/marko.txt

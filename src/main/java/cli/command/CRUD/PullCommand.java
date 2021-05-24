@@ -3,15 +3,19 @@ package cli.command.CRUD;
 
 import app.AppConfig;
 import cli.command.CLICommand;
+import file.GitFile;
 import file.HashFile;
 import servent.message.CRUD.AskPullMessage;
-import servent.message.Message;
 import servent.message.util.MessageUtil;
 
 import java.util.ConcurrentModificationException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class PullCommand  implements CLICommand {
+
+    public static ConcurrentHashMap<Integer, GitFile> listaTimskihFajlova = new ConcurrentHashMap<>();
 
     @Override
     public String commandName() {
@@ -30,7 +34,7 @@ public class PullCommand  implements CLICommand {
             version = Integer.parseInt(args.split(" ")[1]);
         }else if(commands.length==1){
             fileName = args.split(" ")[0];
-            version=-2;
+            version=-2; //znak da uzimam najvecu verziju
         }else {
             fileName="";
             version=-1;
@@ -39,23 +43,57 @@ public class PullCommand  implements CLICommand {
 
         //salje se zahtev za datoteku na odredjen id, pomocu hash funkcije
         try{
-            if(fileName.contains(".txt")){
-                int key = HashFile.hashFileName(fileName.substring(0,fileName.indexOf(".")-1)+".txt");
-                AppConfig.timestampedStandardPrint("Pocinje pretraga za datoteku!");
+            AtomicBoolean flag = new AtomicBoolean(true);
 
-                Message askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),fileName+" "+version,key);
-                MessageUtil.sendMessage(askPull);
-                AppConfig.timestampedErrorPrint("Datoteka " + fileName + " poslana na cvor: " + key);
+            //----------------------------part2
+            listaTimskihFajlova.entrySet().stream().forEach(f->{
+                AppConfig.timestampedErrorPrint(f.getValue().getName()+"  "+fileName);
+                if(f.getValue().getName().contains(fileName) && f.getValue().getVersion()==version){
+                    AppConfig.timestampedErrorPrint("usao");
+                    flag.set(false);
 
-            }else{
-                int key = HashFile.hashFileName(fileName);
-                AppConfig.timestampedStandardPrint("Pocinje pretraga za direktorijum!");
+                    AskPullMessage askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(f.getKey()).getListenerPort(),fileName+" "+version,f.getKey(),AppConfig.myServentInfo.getTeamName());
+                    MessageUtil.sendMessage(askPull);
+                    AppConfig.timestampedErrorPrint("Datoteka " + fileName + " poslana na cvor: " + f.getKey());
 
-                Message askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),fileName +" "+version,key);
-                MessageUtil.sendMessage(askPull);
-                AppConfig.timestampedErrorPrint("Datoteka " + fileName + " poslana na cvor: " + key);
+                }
+            });
+            //----------------------------
 
+            AppConfig.timestampedStandardPrint(flag+"");
+            if(flag.get()){
+                if(fileName.contains(".txt")){
+                    //int key = HashFile.hashFileName(fileName.substring(0,fileName.indexOf(".")-1)+".txt");
+                    int key = HashFile.hashFileName(fileName);
+                    AppConfig.timestampedStandardPrint("Pocinje pretraga za datoteku! " + fileName);
+
+
+                    //-------------------------------
+//                int key;
+//                if(fileName.split("\\\\").length==2){
+//                    key = HashFile.hashFileName(fileName);//dir1/a.txt
+//                    AppConfig.timestampedStandardPrint("if"+key);
+//                }else{
+//                    key = HashFile.hashFileName(fileName.split("\\\\")[0]);
+//                    AppConfig.timestampedStandardPrint("else"+key);
+//                }
+                    //-------------------------------
+
+                    AskPullMessage askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),fileName+" "+version,key,AppConfig.myServentInfo.getTeamName());
+                    MessageUtil.sendMessage(askPull);
+                    AppConfig.timestampedErrorPrint("Datoteka " + fileName + " poslana na cvor: " + key);
+
+                }else{
+                    int key = HashFile.hashFileName(fileName);
+                    AppConfig.timestampedStandardPrint("Pocinje pretraga za direktorijum!");
+
+                    AskPullMessage askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),fileName +" "+version,key,AppConfig.myServentInfo.getTeamName());
+                    MessageUtil.sendMessage(askPull);
+                    AppConfig.timestampedErrorPrint("Datoteka " + fileName + " poslana na cvor: " + key);
+
+                }
             }
+
         }catch (ConcurrentModificationException e){
             e.printStackTrace();
         }

@@ -2,6 +2,11 @@ package app;
 
 import cli.CLIParser;
 import servent.SimpleServentListener;
+import team.LocalTeam;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Describes the procedure for starting a single Servent
@@ -47,18 +52,26 @@ public class ServentMain {
 
 		AppConfig.timestampedStandardPrint("Starting servent " + AppConfig.myServentInfo);
 
+		//pokrece servent listener
 		SimpleServentListener simpleListener = new SimpleServentListener();
 		Thread listenerThread = new Thread(simpleListener);
 		listenerThread.start();
 
+		//pokrece cli komande
 		CLIParser cliParser = new CLIParser(simpleListener);
 		Thread cliThread = new Thread(cliParser);
 		cliThread.start();
 
-		//ovo mene stavlja u krug
+		//pokrece organizaciju u krugu
 		ServentInitializer serventInitializer = new ServentInitializer();
 		Thread initializerThread = new Thread(serventInitializer);
 		initializerThread.start();
+
+
+		//dodamo sebe u team listu
+		Set<Integer> list = new HashSet<>();
+		list.add(AppConfig.myServentInfo.getChordId());
+		LocalTeam.teams.put(AppConfig.myServentInfo.getTeamName(),list);
 
 	}
 }

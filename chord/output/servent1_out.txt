@@ -1,2 +1,28 @@
-15:02:10 - Starting servent [48|localhost|1200]
-15:02:10 - Pausing for 40000 ms
+16:25:40 - Starting servent ServentInfo{ipAddress='localhost', listenerPort=1200, chordId=48, rootPath='src/main/resources/servent1/localRoot', storagePath='src/main/resources/servent1/localStorage', weekLimit=1000, strongLimit=10000, teamName='"b"', teamLimit=1}
+16:25:40 - Pausing for 40000 ms
+16:25:41 - Sending message [48|1200|0||NEW_NODE|1100|28]
+16:25:42 - Got message [28|1100|0||WELCOME|1200|48]
+16:25:43 - Sending message [48|1200|1||UPDATE|1100|28]
+16:25:44 - Got message [48|1200|1|1100|UPDATE|1200|48]
+16:25:45 - Sending message TeamMessage{teamID=48, teamLetter='"b"', originalSender=48, teams={"b"=[48]}}
+16:25:46 - Got message TeamMessage{teamID=48, teamLetter='"b"', originalSender=48, teams={"b"=[48], "a"=[28]}}
+16:25:55 - Got message [4|1300|4|1100|UPDATE|1200|48]
+16:25:56 - Sending message [4|1300|3|1100,1200|UPDATE|1300|4]
+16:25:58 - Got message TeamMessage{teamID=4, teamLetter='"c"', originalSender=4, teams={"c"=[4], "b"=[48], "a"=[28]}}
+16:25:59 - Sending message TeamMessage{teamID=4, teamLetter='"c"', originalSender=4, teams={"c"=[4], "b"=[48], "a"=[28]}}
+16:26:06 - Got message [24|1400|7|1100|UPDATE|1200|48]
+16:26:07 - Sending message [24|1400|5|1100,1200|UPDATE|1300|4]
+16:26:10 - Got message TeamMessage{teamID=24, teamLetter='"b"', originalSender=24, teams={"c"=[4], "b"=[48, 24], "a"=[28]}}
+16:26:10 - Sending message TeamMessage{teamID=24, teamLetter='"b"', originalSender=24, teams={"c"=[4], "b"=[48, 24], "a"=[28]}}
+16:26:16 - Got message [0|1600|9|1300,1400,1100|UPDATE|1200|48]
+16:26:17 - Sending message [0|1600|7|1300,1400,1100,1200|UPDATE|1600|0]
+16:26:20 - Pausing for 5000 ms
+16:26:21 - Got message TeamMessage{teamID=0, teamLetter='"a"', originalSender=0, teams={"c"=[4], "b"=[48, 24], "a"=[0, 28]}}
+16:26:22 - Sending message TeamMessage{teamID=0, teamLetter='"a"', originalSender=0, teams={"c"=[4], "b"=[48, 24], "a"=[0, 28]}}
+16:26:25 - Pausing for 5000 ms
+16:26:30 - My info: ServentInfo{ipAddress='localhost', listenerPort=1200, chordId=48, rootPath='src/main/resources/servent1/localRoot', storagePath='src/main/resources/servent1/localStorage', weekLimit=1000, strongLimit=10000, teamName='"b"', teamLimit=1}
+16:26:30 - LocalStorage: []
+16:26:30 - LocalRoot: []
+16:26:30 - LastModified: {}
+16:26:30 - LocalTeams: {"c"=[4], "b"=[48, 24], "a"=[0, 28]}
+16:26:30 - Stopping...

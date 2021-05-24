@@ -55,11 +55,11 @@ public class CommitCommand implements CLICommand {
                         TellPullHandler.lastModifiedTimeFiles.entrySet().stream().filter(x-> x.getKey().getPath().equals(a.toFile().getPath())).forEach(fs->{
 
 
-                            key=HashFile.hashFileName(a.toFile().getName().substring(0,a.toFile().getName().indexOf(".")-1)+".txt");
+                            key=HashFile.hashFileName(a.toFile().getName().replaceAll("[0-9]\\.","."));
 
                             //uzima odgovarajucu verziju takve datoteke
                             LocalRoot.workingRoot.stream().filter(
-                                    t->t.getName().equals(a.toFile().getPath())).forEach(o->{
+                                    t->t.getPath().equals(a.toFile().getPath())).forEach(o->{
                                 ver.set(o.getVersion());
                             });
 
@@ -68,7 +68,7 @@ public class CommitCommand implements CLICommand {
                                 CommitMessage msg = new CommitMessage(
                                         AppConfig.myServentInfo.getListenerPort(),
                                         AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),
-                                        a.toFile().getPath(),
+                                        a.toFile().getPath(),  //src/../root/a2.txt || rc/../root/dir1/a2.txt
                                         AddCommand.fileReader(a.toFile().getPath()),
                                         ver.get(),
                                         AppConfig.myServentInfo.getChordId(),key);

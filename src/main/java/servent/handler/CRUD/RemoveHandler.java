@@ -42,7 +42,7 @@ public class RemoveHandler implements MessageHandler {
 
 
                     Files.walk(Paths.get(AppConfig.myServentInfo.getStoragePath())).filter(Files::isRegularFile).forEach(a->{
-                        if(a.toFile().getPath().contains(clientMessage.getMessageText())){
+                        if(a.toFile().getPath().replaceAll("\\d\\.",".").contains(clientMessage.getMessageText())){
                             AppConfig.timestampedStandardPrint(a.toFile().getName() +" je obrisana: " +a.toFile().delete());
                         }
                     });

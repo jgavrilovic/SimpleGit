@@ -9,10 +9,12 @@ import servent.message.CRUD.AddMessage;
 import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.util.MessageUtil;
+import team.LocalTeam;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AddHandler implements MessageHandler {
 
@@ -33,14 +35,15 @@ public class AddHandler implements MessageHandler {
             if (AppConfig.chordState.isKeyMine(key)) {
                 try {
                     //citam ime i sadrzinu fajla
-                    String nameFile = ((AddMessage)clientMessage).getNameOfFile();
+                    String nameFile = ((AddMessage)clientMessage).getNameOfFile(); //jovan.txt || dir1/jovan.txt
                     String contentFile = ((AddMessage)clientMessage).getContentOfFile();
-
+                    String path=nameFile.replace(".txt","0.txt");
                     //ime fajla se cuvao kao ime + verzija
-                    nameFile=nameFile.substring(0,nameFile.length()-4)+"0.txt";
+
+
 
                     //odvajam putanju do direkorijuma od putanje do fajla
-                    String fullpath = AppConfig.myServentInfo.getStoragePath()+"/"+nameFile;
+                    String fullpath = AppConfig.myServentInfo.getStoragePath()+"/"+path; //src/../jovan0.txt
                     String[] arrayFullpath = fullpath.split("\\\\");
                     StringBuilder dirs= new StringBuilder();
 
@@ -48,6 +51,8 @@ public class AddHandler implements MessageHandler {
                         dirs.append(arrayFullpath[i]).append("/");
                     }
 
+
+                    AppConfig.timestampedStandardPrint(nameFile);
                     //pravim foldere
                     boolean a = new File(dirs.toString()).mkdirs();
                     if(a){
@@ -57,6 +62,7 @@ public class AddHandler implements MessageHandler {
                     }
 
                     //pravim fajl
+                    AppConfig.timestampedStandardPrint("pravim fajl na putanji: " + fullpath);
                     File f = new File(fullpath);
                     if(f.isFile()){
                         boolean b  = f.createNewFile();
@@ -73,9 +79,13 @@ public class AddHandler implements MessageHandler {
                         AppConfig.timestampedErrorPrint("Doslo je do greske pri upisivanju");
                         e.printStackTrace();
                     }
-
+                    //za svaku datoteku inicijaluzjem 'team'='0'
+                    ConcurrentHashMap<String,Integer> teamPulls = new ConcurrentHashMap<>();
+                    LocalTeam.teams.entrySet().stream().forEach(e->{
+                        teamPulls.put(e.getKey(),0);
+                    });
                     //dodajem gitfile(name,verzija) u storage
-                    GitFile gitFile = new GitFile(f.getPath());
+                    GitFile gitFile = new GitFile(nameFile,f.getPath(),0,teamPulls);
                     LocalStorage.storage.add(gitFile);
 
                 }catch (Exception e){

@@ -1,9 +1,11 @@
 package cli.command;
 
 import app.AppConfig;
+import cli.command.CRUD.PullCommand;
 import file.LocalRoot;
 import file.LocalStorage;
 import servent.handler.CRUD.TellPullHandler;
+import team.LocalTeam;
 
 public class InfoCommand implements CLICommand {
 
@@ -19,9 +21,8 @@ public class InfoCommand implements CLICommand {
 		AppConfig.timestampedStandardPrint("LocalStorage: " + LocalStorage.storage);
 		AppConfig.timestampedStandardPrint("LocalRoot: " + LocalRoot.workingRoot);
 		AppConfig.timestampedStandardPrint("LastModified: " + TellPullHandler.lastModifiedTimeFiles);
-		//AppConfig.timestampedStandardPrint("DHTFILES: " + DHTFiles.dhtFiles);
-
-
+		AppConfig.timestampedStandardPrint("LocalTeams: " + LocalTeam.teams);
+		AppConfig.timestampedStandardPrint("Team files: " + PullCommand.listaTimskihFajlova);
 	}
 
 }

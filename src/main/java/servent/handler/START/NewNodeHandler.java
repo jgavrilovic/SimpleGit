@@ -9,7 +9,9 @@ import servent.message.START.NewNodeMessage;
 import servent.message.START.SorryMessage;
 import servent.message.START.WelcomeMessage;
 import servent.message.util.MessageUtil;
+import team.LocalTeam;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -88,8 +90,8 @@ public class NewNodeHandler implements MessageHandler {
 				}
 				AppConfig.chordState.setValueMap(myValues);
 
+
 				WelcomeMessage wm = new WelcomeMessage(AppConfig.myServentInfo.getListenerPort(), newNodePort, hisValues);
-				AppConfig.timestampedErrorPrint("NEW NODE: " + hisValues);
 				MessageUtil.sendMessage(wm);
 			} else { //if he is not my predecessor, let someone else take care of it
 				ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(newNodeInfo.getChordId());

@@ -12,11 +12,13 @@ import servent.message.CRUD.ConflictType;
 import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.util.MessageUtil;
+import team.LocalTeam;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,7 +40,7 @@ public class CommitHandler implements MessageHandler {
             int key = ((CommitMessage)clientMessage).getTarget();
             if (AppConfig.chordState.isKeyMine(key)) {
                 try {
-                    String name = ((CommitMessage)clientMessage).getNameOfFile();
+                    String name = ((CommitMessage)clientMessage).getNameOfFile();//src/../root/a2.txt || rc/../root/dir1/a2.txt
                     String content = ((CommitMessage)clientMessage).getContentOfFile();
                     int version = ((CommitMessage)clientMessage).getVersion();
 
@@ -47,13 +49,13 @@ public class CommitHandler implements MessageHandler {
 
                     Queue<GitFile> temp = new ConcurrentLinkedQueue<>();
 
-                    String datoteka = splitPath[splitPath.length-1];//a.replaceAll("[0-9]", "")
+                    String fileName = splitPath[splitPath.length-1];//a.replaceAll("[0-9]", "")
 
-                    AppConfig.timestampedErrorPrint(name+" "+content+" "+version+" "+datoteka);
+                    AppConfig.timestampedErrorPrint(name+" "+content+" "+version+" "+fileName);
 
 
                     AtomicInteger conflict = new AtomicInteger(0);
-                    LocalStorage.storage.stream().filter(f-> f.getName().replaceAll("[0-9]", "").contains(datoteka.replaceAll("[0-9]", ""))).forEach(o->{
+                    LocalStorage.storage.stream().filter(f-> f.getName().contains(fileName.replaceAll("[0-9]\\.", "."))).forEach(o->{
                         if(o.getVersion()==version)
                             conflict.set(1);
                     });
@@ -62,9 +64,10 @@ public class CommitHandler implements MessageHandler {
                     if(conflict.get()==0) {
                         //ako nije ista verzija cuvam u storage kao naziv: naziv+verzija , verzija
                         AppConfig.timestampedStandardPrint("nije ista verzija");
-                        String path = name.substring(0,name.length()-5)+version+".txt";
-                        path=path.replace(path.substring(0,path.indexOf("localRoot")+9),AppConfig.myServentInfo.getStoragePath());
+                        String path = name.replaceAll("[0-9]\\.", version+".");
+                        path=path.substring(path.indexOf("localRoot")).replace("localRoot\\","");
 
+                        path = AppConfig.myServentInfo.getStoragePath()+"/"+path;
                         File file = new File(path);
                         try {
                             boolean isCreated = file.createNewFile();
@@ -79,13 +82,17 @@ public class CommitHandler implements MessageHandler {
                         } catch (IOException e) {
                             AppConfig.timestampedErrorPrint("Doslo je do problema pri kopiranju ili kreiranju fajla " +e.getMessage() );
                         }
-                        temp.add(new GitFile(file.getPath(),version));
+                        ConcurrentHashMap<String,Integer> teamPulls = new ConcurrentHashMap<>();
+                        LocalTeam.teams.entrySet().stream().forEach(e->{
+                            teamPulls.put(e.getKey(),0);
+                        });
+                        temp.add(new GitFile(fileName.replaceAll("[0-9]\\.", "."),file.getPath(),version, teamPulls));
                     }else{
-                        LocalStorage.storage.stream().filter(f-> f.getName().replaceAll("[0-9]", "").contains(datoteka.replaceAll("[0-9]", ""))
+                        LocalStorage.storage.stream().filter(f-> f.getName().equals(fileName.replaceAll("[0-9]\\.", "."))
                                 && f.getVersion()==version).forEach(o->{
                             int target = ((CommitMessage) clientMessage).getSenderID();
                             statFIleName = o.getName();
-                            statFIleCont = AddCommand.fileReader(o.getName());
+                            statFIleCont = AddCommand.fileReader(o.getPath());
                             statFIleVersion=o.getVersion();
                             AppConfig.timestampedErrorPrint(statFIleName+" "+statFIleCont+" "+statFIleVersion);
 

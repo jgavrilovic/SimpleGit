@@ -97,7 +97,17 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					case PONG:
 						messageHandler = new PongHandler1(clientMessage);
 						break;
-
+				//HANDLER ZA TIMOVE
+					case TEAM_UPDATE:
+						messageHandler = new TeamHandler(clientMessage);
+						break;
+					case TELL_PULL_TEAM:
+						messageHandler = new TellPullTeamHandler(clientMessage);
+						break;
+					case TEAM_INFO:
+						messageHandler = new TeamInfoHandler(clientMessage);
+						break;
+				//---------------------------
 
 				}
 				

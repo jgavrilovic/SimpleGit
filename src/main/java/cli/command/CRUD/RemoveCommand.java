@@ -25,7 +25,7 @@ public class RemoveCommand  implements CLICommand {
         RemoveMessage removeMessage = new RemoveMessage(
                 AppConfig.myServentInfo.getListenerPort(),
                 AppConfig.chordState.getNextNodeForKey(destination).getListenerPort(),
-                args,
+                fullpath1,
                 AppConfig.myServentInfo.getChordId(),
                 destination);
         MessageUtil.sendMessage(removeMessage);
