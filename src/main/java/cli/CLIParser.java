@@ -4,6 +4,9 @@ import app.AppConfig;
 import app.Cancellable;
 import cli.command.*;
 import cli.command.CRUD.*;
+import cli.command.FAILURE.PingCommand;
+import cli.command.INFO.InfoCommand;
+import cli.command.INFO.SuccessorInfo;
 import servent.SimpleServentListener;
 
 import java.util.ArrayList;

@@ -1,7 +1,12 @@
-package servent.handler;
+package servent.handler.FAILURE;
 
 import app.AppConfig;
+import servent.handler.MessageHandler;
 import servent.message.*;
+import servent.message.FAILURE.PingMessage;
+import servent.message.FAILURE.PingType;
+import servent.message.FAILURE.PongMessage;
+import servent.message.FAILURE.PongType;
 import servent.message.util.MessageUtil;
 
 public class PingHandler1 implements MessageHandler {

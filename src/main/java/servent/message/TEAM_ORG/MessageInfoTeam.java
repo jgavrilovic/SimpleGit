@@ -1,7 +1,9 @@
-package servent.message;
+package servent.message.TEAM_ORG;
 
 import file.GitFile;
 import lombok.Getter;
+import servent.message.BasicMessage;
+import servent.message.MessageType;
 
 import java.util.ArrayList;
 import java.util.Set;

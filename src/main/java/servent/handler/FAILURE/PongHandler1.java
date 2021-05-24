@@ -1,9 +1,10 @@
-package servent.handler;
+package servent.handler.FAILURE;
 
 import app.AppConfig;
+import servent.handler.MessageHandler;
 import servent.message.Message;
 import servent.message.MessageType;
-import servent.message.PongMessage;
+import servent.message.FAILURE.PongMessage;
 import servent.message.util.MessageUtil;
 
 public class PongHandler1 implements MessageHandler {

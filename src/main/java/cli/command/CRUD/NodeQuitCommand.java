@@ -1,6 +1,7 @@
-package cli.command;
+package cli.command.CRUD;
 
 import app.AppConfig;
+import cli.command.CLICommand;
 import servent.handler.START.NodeQuitHandler;
 import servent.message.Message;
 import servent.message.START.NodeQuitMessage;

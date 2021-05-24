@@ -1,4 +1,4 @@
-package servent.message;
+package servent.message.FAILURE;
 
 public enum PingType {
 

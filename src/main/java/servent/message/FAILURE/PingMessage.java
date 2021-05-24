@@ -1,4 +1,7 @@
-package servent.message;
+package servent.message.FAILURE;
+
+import servent.message.BasicMessage;
+import servent.message.MessageType;
 
 public class PingMessage  extends BasicMessage {
 

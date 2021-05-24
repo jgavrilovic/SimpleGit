@@ -1,6 +1,7 @@
-package cli.command;
+package cli.command.INFO;
 
 import app.AppConfig;
+import cli.command.CLICommand;
 import cli.command.CRUD.PullCommand;
 import file.LocalRoot;
 import file.LocalStorage;

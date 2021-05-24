@@ -1,6 +1,8 @@
-package servent.message;
+package servent.message.TEAM_ORG;
 
 import lombok.Getter;
+import servent.message.BasicMessage;
+import servent.message.MessageType;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

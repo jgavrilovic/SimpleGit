@@ -1,6 +1,8 @@
-package servent.message;
+package servent.message.TEAM_COMM;
 
 import lombok.Getter;
+import servent.message.BasicMessage;
+import servent.message.MessageType;
 
 @Getter
 public class TellPullTeamMessage extends BasicMessage {

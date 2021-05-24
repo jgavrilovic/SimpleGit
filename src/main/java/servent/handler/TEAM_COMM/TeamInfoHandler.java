@@ -1,9 +1,10 @@
-package servent.handler;
+package servent.handler.TEAM_COMM;
 
 import app.AppConfig;
 import cli.command.CRUD.PullCommand;
+import servent.handler.MessageHandler;
 import servent.message.Message;
-import servent.message.MessageInfoTeam;
+import servent.message.TEAM_ORG.MessageInfoTeam;
 import servent.message.MessageType;
 import servent.message.util.MessageUtil;
 

@@ -2,9 +2,6 @@ package servent.message.util;
 
 import app.AppConfig;
 import servent.message.Message;
-import servent.message.MessageType;
-import servent.message.PongMessage;
-import servent.message.PongType;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

@@ -6,13 +6,12 @@ import servent.handler.MessageHandler;
 import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.START.UpdateMessage;
-import servent.message.TeamMessage;
+import servent.message.TEAM_ORG.TeamMessage;
 import servent.message.util.MessageUtil;
 import team.LocalTeam;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class UpdateHandler implements MessageHandler {
 

@@ -1,5 +1,6 @@
-package servent.handler;
+package servent.handler.FAILURE;
 
+import servent.handler.MessageHandler;
 import servent.message.Message;
 
 import java.util.Collections;

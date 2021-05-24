@@ -1,9 +1,10 @@
-package cli.command;
+package cli.command.FAILURE;
 
 
 import app.AppConfig;
-import servent.message.PingMessage;
-import servent.message.PingType;
+import cli.command.CLICommand;
+import servent.message.FAILURE.PingMessage;
+import servent.message.FAILURE.PingType;
 import servent.message.util.MessageUtil;
 
 public class PingCommand implements CLICommand {

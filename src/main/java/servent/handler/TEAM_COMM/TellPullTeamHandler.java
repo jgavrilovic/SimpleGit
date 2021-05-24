@@ -1,19 +1,19 @@
-package servent.handler;
+package servent.handler.TEAM_COMM;
 
 import app.AppConfig;
 import file.GitFile;
 import file.LocalStorage;
+import servent.handler.MessageHandler;
 import servent.message.Message;
-import servent.message.MessageInfoTeam;
+import servent.message.TEAM_ORG.MessageInfoTeam;
 import servent.message.MessageType;
-import servent.message.TellPullTeamMessage;
+import servent.message.TEAM_COMM.TellPullTeamMessage;
 import servent.message.util.MessageUtil;
 import team.LocalTeam;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class TellPullTeamHandler implements MessageHandler {
 

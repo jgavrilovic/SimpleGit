@@ -1,13 +1,13 @@
-package servent.handler;
+package servent.handler.TEAM_ORG;
 
 import app.AppConfig;
+import servent.handler.MessageHandler;
 import servent.message.Message;
 import servent.message.MessageType;
-import servent.message.TeamMessage;
+import servent.message.TEAM_ORG.TeamMessage;
 import servent.message.util.MessageUtil;
 import team.LocalTeam;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -10,7 +10,7 @@ import servent.message.CRUD.AskPullMessage;
 import servent.message.CRUD.TellPullMessage;
 import servent.message.Message;
 import servent.message.MessageType;
-import servent.message.TellPullTeamMessage;
+import servent.message.TEAM_COMM.TellPullTeamMessage;
 import servent.message.util.MessageUtil;
 
 import java.util.ArrayList;

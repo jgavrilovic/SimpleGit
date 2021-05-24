@@ -1,7 +1,8 @@
-package cli.command;
+package cli.command.INFO;
 
 import app.AppConfig;
 import app.ServentInfo;
+import cli.command.CLICommand;
 
 public class SuccessorInfo implements CLICommand {
 
