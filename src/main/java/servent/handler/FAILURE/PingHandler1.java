@@ -3,10 +3,7 @@ package servent.handler.FAILURE;
 import app.AppConfig;
 import servent.handler.MessageHandler;
 import servent.message.*;
-import servent.message.FAILURE.PingMessage;
-import servent.message.FAILURE.PingType;
-import servent.message.FAILURE.PongMessage;
-import servent.message.FAILURE.PongType;
+import servent.message.FAILURE.*;
 import servent.message.util.MessageUtil;
 
 public class PingHandler1 implements MessageHandler {
@@ -29,22 +26,22 @@ public class PingHandler1 implements MessageHandler {
     @Override
     public void run() {
         if (clientMessage.getMessageType() == MessageType.PING) {
-            PingMessage message = (PingMessage)clientMessage;
+            PingMessage1 message = (PingMessage1)clientMessage;
             try {
                 switch (message.getPingType()){
                     case PING:
                         // Ako sam konacna destinacija Pinga
                         if (message.getOriginalReciverID() == AppConfig.myServentInfo.getChordId()){
 
-                            PongMessage pongMessage = new PongMessage(AppConfig.myServentInfo.getListenerPort(),
+                            PongMessage1 pongMessage1 = new PongMessage1(AppConfig.myServentInfo.getListenerPort(),
                                     AppConfig.chordState.getNextNodeForKey(message.getOriginalSenderID()).getListenerPort(),
                                     PongType.PONG, message.getMessageId());
 
-                            MessageUtil.sendMessage(pongMessage);
+                            MessageUtil.sendMessage(pongMessage1);
                         }
                         else{
                             //prosledjujemo ping
-                            PingMessage pingMessage = new PingMessage(AppConfig.myServentInfo.getListenerPort(),
+                            PingMessage1 pingMessage = new PingMessage1(AppConfig.myServentInfo.getListenerPort(),
                                     AppConfig.chordState.getNextNodeForKey(message.getOriginalReciverID()).getListenerPort(),
                                     message.getOriginalSenderID(), message.getOriginalReciverID(),
                                     PingType.PING);

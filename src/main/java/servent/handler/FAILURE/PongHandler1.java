@@ -2,10 +2,13 @@ package servent.handler.FAILURE;
 
 import app.AppConfig;
 import servent.handler.MessageHandler;
+import servent.message.FAILURE.PongMessage1;
 import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.FAILURE.PongMessage;
 import servent.message.util.MessageUtil;
+
+import static servent.message.FAILURE.PongType.*;
 
 public class PongHandler1 implements MessageHandler {
 
@@ -15,13 +18,11 @@ public class PongHandler1 implements MessageHandler {
     }
 
 
-
-
     @Override
     public void run() {
         if (clientMessage.getMessageType() == MessageType.PONG) {
 
-            PongMessage message = (PongMessage)clientMessage;
+            PongMessage1 message = (PongMessage1)clientMessage;
             try {
 
                 switch (message.getPongType()){

@@ -1,7 +1,16 @@
 package servent.handler.FAILURE;
 
+import app.AppConfig;
 import servent.handler.MessageHandler;
+import servent.message.FAILURE.PingMessage;
+import servent.message.FAILURE.PingMessage1;
+import servent.message.FAILURE.PongMessage;
 import servent.message.Message;
+import servent.message.MessageType;
+import servent.message.util.MessageUtil;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class PingHandler implements MessageHandler {
@@ -12,22 +21,15 @@ public class PingHandler implements MessageHandler {
         this.clientMessage = clientMessage;
     }
 
-    @Override
-    public void run() {
 
-    }
-}
-//successor_info
+    /**
+     * -veze u sistemu
+     * -cuvanje podataka(kloniranje)
+     * -raspordjivanje datoteka
+     * -otkaz cvora i reorganizacija
 
-/**
- * -veze u sistemu
- * -cuvanje podataka(kloniranje)
- * -raspordjivanje datoteka
- * -otkaz cvora i reorganizacija
- *
- *
- * */
-    /*
+     * */
+
     private TimerTask timerTask = new TimerTask() {
         @Override
         public void run() { counter++; }
@@ -152,4 +154,3 @@ public class PingHandler implements MessageHandler {
 
     }
 }
-*/
