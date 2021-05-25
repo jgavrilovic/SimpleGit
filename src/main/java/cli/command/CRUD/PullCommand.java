@@ -60,38 +60,18 @@ public class PullCommand  implements CLICommand {
             });
             //----------------------------
 
-            AppConfig.timestampedStandardPrint(flag+"");
+
             if(flag.get()){
-                if(fileName.contains(".txt")){
-                    //int key = HashFile.hashFileName(fileName.substring(0,fileName.indexOf(".")-1)+".txt");
-                    int key = HashFile.hashFileName(fileName);
-                    AppConfig.timestampedStandardPrint("Pocinje pretraga za datoteku! " + fileName);
-
-
-                    //-------------------------------
-//                int key;
-//                if(fileName.split("\\\\").length==2){
-//                    key = HashFile.hashFileName(fileName);//dir1/a.txt
-//                    AppConfig.timestampedStandardPrint("if"+key);
-//                }else{
-//                    key = HashFile.hashFileName(fileName.split("\\\\")[0]);
-//                    AppConfig.timestampedStandardPrint("else"+key);
-//                }
-                    //-------------------------------
-
-                    AskPullMessage askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),fileName+" "+version,key,AppConfig.myServentInfo.getTeamName());
-                    MessageUtil.sendMessage(askPull);
-                    AppConfig.timestampedErrorPrint("Datoteka " + fileName + " poslana na cvor: " + key);
-
+                int key;
+                if(fileName.split("\\\\").length==2){
+                    key = HashFile.hashFileName(fileName);
                 }else{
-                    int key = HashFile.hashFileName(fileName);
-                    AppConfig.timestampedStandardPrint("Pocinje pretraga za direktorijum!");
-
-                    AskPullMessage askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),fileName +" "+version,key,AppConfig.myServentInfo.getTeamName());
-                    MessageUtil.sendMessage(askPull);
-                    AppConfig.timestampedErrorPrint("Datoteka " + fileName + " poslana na cvor: " + key);
-
+                    key = HashFile.hashFileName(fileName.split("\\\\")[0]);
                 }
+                AppConfig.timestampedStandardPrint("Pocinje pretraga za datoteku! " + fileName);
+                AskPullMessage askPull = new AskPullMessage(AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(),fileName+" "+version,key,AppConfig.myServentInfo.getTeamName());
+                MessageUtil.sendMessage(askPull);
+                AppConfig.timestampedErrorPrint("Datoteka " + fileName + " poslana na cvor: " + key);
             }
 
         }catch (ConcurrentModificationException e){

@@ -37,7 +37,7 @@ public class AddHandler implements MessageHandler {
                     //citam ime i sadrzinu fajla
                     String nameFile = ((AddMessage)clientMessage).getNameOfFile(); //jovan.txt || dir1/jovan.txt
                     String contentFile = ((AddMessage)clientMessage).getContentOfFile();
-                    String path=nameFile.replace(".txt","0.txt");
+                    String path=nameFile.replace(".","0.");
                     //ime fajla se cuvao kao ime + verzija
 
 

@@ -40,21 +40,22 @@ public class CommitHandler implements MessageHandler {
             int key = ((CommitMessage)clientMessage).getTarget();
             if (AppConfig.chordState.isKeyMine(key)) {
                 try {
-                    String name = ((CommitMessage)clientMessage).getNameOfFile();//src/../root/a2.txt || rc/../root/dir1/a2.txt
-                    String content = ((CommitMessage)clientMessage).getContentOfFile();
-                    int version = ((CommitMessage)clientMessage).getVersion();
+                    String name = ((CommitMessage)clientMessage).getNameOfFile();//src\main\resources\servent0\localRoot\dir1\c0.txt
+                    String content = ((CommitMessage)clientMessage).getContentOfFile();//cd
+                    int version = ((CommitMessage)clientMessage).getVersion(); //1
 
 
                     String[] splitPath = name.split("\\\\");
 
                     Queue<GitFile> temp = new ConcurrentLinkedQueue<>();
 
-                    String fileName = splitPath[splitPath.length-1];//a.replaceAll("[0-9]", "")
+                    String fileName = splitPath[splitPath.length-1];//c0.txt
 
-                    AppConfig.timestampedErrorPrint(name+" "+content+" "+version+" "+fileName);
+                    AppConfig.timestampedErrorPrint(name+" " +content+" "+version+" "+fileName);
 
 
                     AtomicInteger conflict = new AtomicInteger(0);
+                    AppConfig.timestampedErrorPrint(fileName.replaceAll("[0-9]\\.", "."));
                     LocalStorage.storage.stream().filter(f-> f.getName().contains(fileName.replaceAll("[0-9]\\.", "."))).forEach(o->{
                         if(o.getVersion()==version)
                             conflict.set(1);
@@ -88,7 +89,8 @@ public class CommitHandler implements MessageHandler {
                         });
                         temp.add(new GitFile(fileName.replaceAll("[0-9]\\.", "."),file.getPath(),version, teamPulls));
                     }else{
-                        LocalStorage.storage.stream().filter(f-> f.getName().equals(fileName.replaceAll("[0-9]\\.", "."))
+                        AppConfig.timestampedStandardPrint("ista verzija, problem!");
+                        LocalStorage.storage.stream().filter(f-> f.getName().contains(fileName.replaceAll("[0-9]\\.", "."))
                                 && f.getVersion()==version).forEach(o->{
                             int target = ((CommitMessage) clientMessage).getSenderID();
                             statFIleName = o.getName();
@@ -97,12 +99,11 @@ public class CommitHandler implements MessageHandler {
                             AppConfig.timestampedErrorPrint(statFIleName+" "+statFIleCont+" "+statFIleVersion);
 
                             //salje se poruka za konflikt i ocekuje se da izabere nacin kako da resi konflikt
-                            String[] nameAr = o.getName().split("\\\\");
-                            String myName = AppConfig.myServentInfo.getRootPath()+"/"+nameAr[nameAr.length-1];
+
                             ConflictMessage conflictMessage = new ConflictMessage(
                                     AppConfig.myServentInfo.getListenerPort(),
                                     AppConfig.chordState.getNextNodeForKey(target).getListenerPort(),
-                                    myName,"",
+                                    o.getPath(),"",
                                     ConflictType.WARNING,
                                     AppConfig.myServentInfo.getChordId(), target
                             );
