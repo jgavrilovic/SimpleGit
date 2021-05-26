@@ -36,7 +36,7 @@ public class ConflictHandler  implements MessageHandler {
                     if(txt==ConflictType.WARNING){
                         AppConfig.timestampedStandardPrint(txt + " doslo je do konflikta... " + ((ConflictMessage) clientMessage).getName());
                         AppConfig.timestampedStandardPrint("Izaberi jednu od opcija: view, push ili pull");
-                        fileProblem=((ConflictMessage) clientMessage).getName();
+                        fileProblem=((ConflictMessage) clientMessage).getName();  //src\main\resources\servent1\localStorage\dir1\b0.txt
 
                     }
                     else if(txt==ConflictType.VIEW){
@@ -81,17 +81,16 @@ public class ConflictHandler  implements MessageHandler {
                          *  Sending message ConflictMessage{conflictType=PUSH, senderID=4, target=48, name='src/main/resources/servent1/localRoot/a2.txt', content='ser2
                          *  Got message     ConflictMessage{conflictType=PUSH, senderID=4, target=48, name='src/main/resources/servent1/localRoot/a2.txt', content='ser2', version=0}
                          *
-                         *  Takodje proberi f.getName() i name jer baca StringIndexOutOfBoundsException
                          * */
-                        LocalStorage.storage.stream().filter(f -> f.getName().contains(name.substring(name.indexOf("localStorage\\")).replace("localStorage\\",""))).iterator().forEachRemaining(o -> {
+                        LocalStorage.storage.stream().filter(f -> f.getPath().contains(name)).iterator().forEachRemaining(o -> {
                             AppConfig.timestampedStandardPrint("Datoteka se prepisuje");
                             try {
-                                FileWriter myWriter = new FileWriter(o.getName());
+                                FileWriter myWriter = new FileWriter(name);
                                 myWriter.write(content);
                                 myWriter.close();
                                 AppConfig.timestampedStandardPrint("prepisan sadrzaj datoteke!");
                             } catch (IOException e) {
-                                AppConfig.timestampedErrorPrint("Doslo je do greske prilikom upisa u fajl: " + o.getName());
+                                AppConfig.timestampedErrorPrint("Doslo je do greske prilikom upisa u fajl: " + name);
                             }
                         });
                     }

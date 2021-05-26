@@ -33,7 +33,7 @@ public class AskPullHandler  implements MessageHandler {
 
                 try{
                     //cita se iz poruke ime i verzija
-                    String name = clientMessage.getMessageText().split(" ")[0]; //jovan.txt 5 || dir1 -2
+                    String name = clientMessage.getMessageText().split(" ")[0].replace("\\\\","\\"); //dir/jovan.txt 5 || dir1 -2
                     int version = Integer.parseInt(clientMessage.getMessageText().split(" ")[1]);
 
                     AppConfig.timestampedStandardPrint("Dosao je zahtev za povlacenje datoteke pod nazivom: " + name + " i verzije: " + version);
@@ -49,26 +49,20 @@ public class AskPullHandler  implements MessageHandler {
                     //u listu fajlova se dodaju oni koji od govaraju zahtevima
                     List<GitFile> gitfiles = new ArrayList<>();
                     int finalMaxVersion = maxVersion;
-                    if(name.contains(".txt")){
-                        LocalStorage.storage.stream().filter(x->x.getName().equals(name) && x.getVersion()== finalMaxVersion).forEach(gitfiles::add);
+
+                    LocalStorage.storage.stream().filter(x->x.getName().contains(name) && x.getVersion()== finalMaxVersion).forEach(git-> {
+                        gitfiles.add(git);
                         //------------------------------------part2
-                        LocalStorage.storage.stream().filter(x->x.getName().equals(name) && x.getVersion()== finalMaxVersion).forEach(git->{
-                            git.getTeamPulls().entrySet().stream().filter(e->e.getKey().equals(((AskPullMessage) clientMessage).getTeam())).forEach(team->{
-                                git.getTeamPulls().put(team.getKey(),team.getValue()+1);
-                            });
+                        git.getTeamPulls().entrySet().stream().filter(e -> e.getKey().equals(((AskPullMessage) clientMessage).getTeam())).forEach(team -> {
+                            git.getTeamPulls().put(team.getKey(), team.getValue() + 1);
                         });
                         //------------------------------------
-                    }
-                    else{
-                        LocalStorage.storage.stream().filter(x->x.getPath().contains(name)).forEach(gitfiles::add);
-                        //------------------------------------part2
-                        LocalStorage.storage.stream().filter(x->x.getName().equals(name)).forEach(git->{
-                            git.getTeamPulls().entrySet().stream().filter(e->e.getKey().equals(((AskPullMessage) clientMessage).getTeam())).forEach(team->{
-                                git.getTeamPulls().put(team.getKey(),team.getValue()+1);
-                            });
-                        });
-                        //------------------------------------
-                    }
+                    });
+
+
+
+
+
 
                     //------------------------------------part2
                     //provera da li se granica pull presla

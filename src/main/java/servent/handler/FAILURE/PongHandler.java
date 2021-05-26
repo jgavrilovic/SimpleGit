@@ -1,7 +1,11 @@
 package servent.handler.FAILURE;
 
+import app.AppConfig;
 import servent.handler.MessageHandler;
+import servent.message.FAILURE.PongMessage;
 import servent.message.Message;
+import servent.message.MessageType;
+import servent.message.util.MessageUtil;
 
 import java.util.Collections;
 import java.util.Set;
@@ -15,12 +19,6 @@ public class PongHandler implements MessageHandler {
     public PongHandler(Message clientMessage) {
         this.clientMessage = clientMessage;
     }
-
-    @Override
-    public void run() {
-
-    }
-}
 
 //successor_info
 
@@ -46,7 +44,7 @@ public class PongHandler implements MessageHandler {
  *        no poruka od 2.. dakle sa kecom nesto nije ok
  *
  * */
-/*
+
     public static boolean basicPongRecived = false;
     public static boolean alertPongRecived = false;
     public static boolean confirm = false;
@@ -79,5 +77,5 @@ public class PongHandler implements MessageHandler {
 
     }
 }
-*/
+
 

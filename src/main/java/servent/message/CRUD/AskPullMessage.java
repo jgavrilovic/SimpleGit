@@ -19,9 +19,12 @@ public class AskPullMessage extends BasicMessage {
 
     @Override
     public String toString() {
-        return "AskPullMessage{" +
-                "target=" + target +
-                "team=" + team +
-                '}';
+        return "AskPullMessage: "
+                + super.getSenderPort()
+                + " | " + super.getReceiverPort()
+                + " | " + super.getMessageId()
+                + " | " + super.getMessageText()
+                + " | " + team
+                + " | " + target;
     }
 }

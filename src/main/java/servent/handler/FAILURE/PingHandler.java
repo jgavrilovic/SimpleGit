@@ -1,7 +1,17 @@
 package servent.handler.FAILURE;
 
+import app.AppConfig;
 import servent.handler.MessageHandler;
+import servent.message.FAILURE.PingMessage;
+import servent.message.FAILURE.PingMessage1;
+import servent.message.FAILURE.PongMessage;
+import servent.message.FAILURE.RemoveNodeMessage;
 import servent.message.Message;
+import servent.message.MessageType;
+import servent.message.util.MessageUtil;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class PingHandler implements MessageHandler {
@@ -12,31 +22,25 @@ public class PingHandler implements MessageHandler {
         this.clientMessage = clientMessage;
     }
 
-    @Override
-    public void run() {
 
-    }
-}
-//successor_info
+    /**
+     * -veze u sistemu
+     * -cuvanje podataka(kloniranje)
+     * -raspordjivanje datoteka
+     * -otkaz cvora i reorganizacija
 
-/**
- * -veze u sistemu
- * -cuvanje podataka(kloniranje)
- * -raspordjivanje datoteka
- * -otkaz cvora i reorganizacija
- *
- *
- * */
-    /*
+     * */
+
     private TimerTask timerTask = new TimerTask() {
         @Override
         public void run() { counter++; }
     };
-    private Timer timer = new Timer("MyTimer");
+
     private int counter=0;
     private boolean send = true;
     @Override
     public void run() {
+        Timer timer = new Timer("MyTimer");
         if (clientMessage.getMessageType() == MessageType.PING) {
             try {
                 if(clientMessage.getMessageText().equals("")){
@@ -85,7 +89,20 @@ public class PingHandler implements MessageHandler {
                                 break;
                             }else{
                                 if(PongHandler.confirm){
-                                    //brisi sumnjiv node
+                                    AppConfig.timestampedErrorPrint("Brise se node: " +AppConfig.chordState.getSuccessorTable()[0].getChordId());
+
+                                    AppConfig.chordState.removeNodes(AppConfig.chordState.getSuccessorTable()[0].getChordId());
+                                    //brisem node
+
+                                    AppConfig.timestampedErrorPrint("salje se poruka");
+                                    RemoveNodeMessage removeNodeMessage = new RemoveNodeMessage(
+                                            AppConfig.myServentInfo.getListenerPort(),
+                                            AppConfig.chordState.getNextNodePort(),
+                                            AppConfig.chordState.getSuccessorTable()[0].getChordId(),
+                                            AppConfig.myServentInfo.getChordId()
+
+                                    );
+                                    MessageUtil.sendMessage(removeNodeMessage);
                                     PongHandler.confirm=false;
                                     counter=0;
                                     timer.cancel();
@@ -152,4 +169,3 @@ public class PingHandler implements MessageHandler {
 
     }
 }
-*/

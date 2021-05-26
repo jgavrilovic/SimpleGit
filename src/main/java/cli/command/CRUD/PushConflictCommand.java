@@ -20,12 +20,22 @@ public class PushConflictCommand implements CLICommand {
     @Override
     public void execute(String args) {
 
-        Pattern p = Pattern.compile("[0-9]");
-        String path = ConflictHandler.fileProblem.substring(ConflictHandler.fileProblem.indexOf("localRoot")+10);
+        Pattern p = Pattern.compile("[0-9]\\.");
+        String path = ConflictHandler.fileProblem.substring(ConflictHandler.fileProblem.indexOf("localStorage")+13); //src\main\resources\servent1\localStorage\dir1\b0.txt
+        AppConfig.timestampedErrorPrint(path);
         Matcher m = p.matcher(path);
         m.find();
-        int version = Integer.parseInt(m.group());
-        String content = AddCommand.fileReader(AppConfig.myServentInfo.getRootPath()+"/"+path.replaceAll("[0-9]",version-1+""));
+        int version=0;
+        try{
+            AppConfig.timestampedErrorPrint(m.group());
+             version = Integer.parseInt(m.group().replace(".",""));
+        }catch (IllegalStateException e){
+            AppConfig.timestampedErrorPrint("Doslo je do greske pri obradi verzije");
+        } catch (NumberFormatException e){
+            AppConfig.timestampedErrorPrint("Doslo je do greske , pri transformisanju string->int");
+        }
+
+        String content = AddCommand.fileReader(AppConfig.myServentInfo.getRootPath()+"/"+path);
         ConflictMessage conflictMessage = new ConflictMessage(
                 AppConfig.myServentInfo.getListenerPort(),
                 AppConfig.chordState.getNextNodeForKey(ConflictHandler.target).getListenerPort(),

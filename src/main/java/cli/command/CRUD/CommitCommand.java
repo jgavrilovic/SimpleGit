@@ -32,19 +32,14 @@ public class CommitCommand implements CLICommand {
             fullPath = AppConfig.myServentInfo.getRootPath();
         }
 
+        AppConfig.timestampedStandardPrint("komituje se: " + fullPath);
+        sendCommitMessage(args,fullPath);
 
-        if(fullPath.contains(".txt")){
-            AppConfig.timestampedStandardPrint("komituje se file " + fullPath);
-            sendCommitMessage(fullPath);
-        }else{
-            AppConfig.timestampedStandardPrint("komituje se dir: " + fullPath);
-            sendCommitMessage(fullPath);
-        }
     }
 
 
     private int key=0;
-    private void sendCommitMessage(String  fullPath) {
+    private void sendCommitMessage(String  args,String  fullPath) {
         AtomicInteger ver = new AtomicInteger(0);
         try {
             //prolazi kroz radni koren
@@ -54,8 +49,7 @@ public class CommitCommand implements CLICommand {
                         //proverava da li je datoteka menjana
                         TellPullHandler.lastModifiedTimeFiles.entrySet().stream().filter(x-> x.getKey().getPath().equals(a.toFile().getPath())).forEach(fs->{
 
-
-                            key=HashFile.hashFileName(a.toFile().getName().replaceAll("[0-9]\\.","."));
+                            key=HashFile.hashFileName(args.replaceAll("[0-9]\\.","."));
 
                             //uzima odgovarajucu verziju takve datoteke
                             LocalRoot.workingRoot.stream().filter(

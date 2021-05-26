@@ -3,6 +3,7 @@ package servent.message.util;
 import app.AppConfig;
 import servent.message.*;
 import servent.message.FAILURE.PongMessage;
+import servent.message.FAILURE.PongMessage1;
 import servent.message.FAILURE.PongType;
 
 import java.io.IOException;
@@ -91,10 +92,10 @@ public class MessageUtil {
 	}
 
 	public static void sendDeliveredMessage(Message message){
-		PongMessage pongMessage = new PongMessage(AppConfig.myServentInfo.getListenerPort(),
+		PongMessage1 pongMessage1 = new PongMessage1(AppConfig.myServentInfo.getListenerPort(),
 				message.getSenderPort(),
 				PongType.DELIVERED, message.getMessageId());
 
-		sendMessage(pongMessage);
+		sendMessage(pongMessage1);
 	}
 }

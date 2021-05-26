@@ -4,8 +4,7 @@ import app.AppConfig;
 import app.Cancellable;
 import servent.handler.*;
 import servent.handler.CRUD.*;
-import servent.handler.FAILURE.PingHandler1;
-import servent.handler.FAILURE.PongHandler1;
+import servent.handler.FAILURE.*;
 import servent.handler.START.*;
 import servent.handler.TEAM_COMM.TeamInfoHandler;
 import servent.handler.TEAM_COMM.TellPullTeamHandler;
@@ -96,12 +95,23 @@ public class SimpleServentListener implements Runnable, Cancellable {
 						messageHandler = new ConflictHandler(clientMessage);
 						break;
 				//---------------------------
+
+				//HANDLER ZA OTKAZE
 					case PING:
-						messageHandler = new PingHandler1(clientMessage);
+						messageHandler = new PingHandler(clientMessage);
 						break;
 					case PONG:
-						messageHandler = new PongHandler1(clientMessage);
+						messageHandler = new PongHandler(clientMessage);
 						break;
+					case CLONE_GITFILE:
+						messageHandler = new CloneFileHandler(clientMessage);
+						break;
+					case REMOVE_NODE:
+						messageHandler = new RemoveNodeHandler(clientMessage);
+						break;
+				//---------------------------
+
+
 				//HANDLER ZA TIMOVE
 					case TEAM_UPDATE:
 						messageHandler = new TeamHandler(clientMessage);
@@ -113,6 +123,8 @@ public class SimpleServentListener implements Runnable, Cancellable {
 						messageHandler = new TeamInfoHandler(clientMessage);
 						break;
 				//---------------------------
+
+
 
 				}
 				

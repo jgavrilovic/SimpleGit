@@ -7,16 +7,14 @@ import file.HashFile;
 import file.LocalRoot;
 import servent.message.CRUD.AddMessage;
 import servent.message.util.MessageUtil;
-import team.LocalTeam;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class AddCommand implements CLICommand {
 
@@ -31,6 +29,7 @@ public class AddCommand implements CLICommand {
         String fullPath=AppConfig.myServentInfo.getRootPath()+"/"+args;
 
         //hashiram po nazivu fajla
+        AppConfig.timestampedStandardPrint(args);
         int destination = HashFile.hashFileName(args);
 
         //proveravam da li je id moj ili ne i saljem
@@ -65,25 +64,10 @@ public class AddCommand implements CLICommand {
     /**Slanje fila ili celog direktorijuma na datu putanju, potrebni argumenti
      * putanja do file/dir, id primaoca, flag za tip datoteke*/
     public  void sendFile(String fullPath, int key, boolean flag){
-        /**proveri da li je dir*/
-        if(fullPath.contains(".txt")){
-            File f = new File(fullPath);
-
-
-            LocalRoot.workingRoot.add(new GitFile(f.getName(),f.getPath(),0));
-
-            if(flag){
-                AddMessage addMsg = new AddMessage(
-                        AppConfig.myServentInfo.getListenerPort(),AppConfig.chordState.getNextNodeForKey(key).getListenerPort(), f.getName(), fileReader(f.getPath()),AppConfig.myServentInfo.getListenerPort(), key);
-                MessageUtil.sendMessage(addMsg);
-            }
-        }else{
             try {
                 Files.walk(Paths.get(fullPath)).filter(Files::isRegularFile).forEach(a->{
-
                     File f = new File(a.toFile().getPath());
                     LocalRoot.workingRoot.add(new GitFile(f.getName(),f.getPath(),0));
-
                     String name = f.getPath().substring(f.getPath().indexOf("localRoot")+10);
                     if(flag) {
                         AppConfig.timestampedErrorPrint(name);
@@ -92,10 +76,11 @@ public class AddCommand implements CLICommand {
                         MessageUtil.sendMessage(addMsg);
                     }
                 });
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (SecurityException s) {
+                AppConfig.timestampedErrorPrint("Nedozvoljen pristup fajlu");
+            } catch (IOException e){
+                AppConfig.timestampedErrorPrint("Direktorijum ne moze da se otvori");
             }
-        }
     }
 
 }

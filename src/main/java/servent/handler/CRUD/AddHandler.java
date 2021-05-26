@@ -3,9 +3,11 @@ package servent.handler.CRUD;
 import app.AppConfig;
 import app.ServentInfo;
 import file.GitFile;
+import file.HashFile;
 import file.LocalStorage;
 import servent.handler.MessageHandler;
 import servent.message.CRUD.AddMessage;
+import servent.message.FAILURE.CloneFileMessage;
 import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.util.MessageUtil;
@@ -37,10 +39,8 @@ public class AddHandler implements MessageHandler {
                     //citam ime i sadrzinu fajla
                     String nameFile = ((AddMessage)clientMessage).getNameOfFile(); //jovan.txt || dir1/jovan.txt
                     String contentFile = ((AddMessage)clientMessage).getContentOfFile();
-                    String path=nameFile.replace(".txt","0.txt");
+                    String path=nameFile.replace(".","0.");
                     //ime fajla se cuvao kao ime + verzija
-
-
 
                     //odvajam putanju do direkorijuma od putanje do fajla
                     String fullpath = AppConfig.myServentInfo.getStoragePath()+"/"+path; //src/../jovan0.txt
@@ -87,6 +87,32 @@ public class AddHandler implements MessageHandler {
                     //dodajem gitfile(name,verzija) u storage
                     GitFile gitFile = new GitFile(nameFile,f.getPath(),0,teamPulls);
                     LocalStorage.storage.add(gitFile);
+
+                    //--------------------
+                        /**cuvam dve kopije na putanji id+1 i id-1  */
+
+                    CloneFileMessage cloneFileMessage = new CloneFileMessage(
+                            AppConfig.myServentInfo.getListenerPort(),
+                            AppConfig.chordState.getNextNodeForKey(AppConfig.myServentInfo.getChordId()-1).getListenerPort(),
+                            f.getName(),
+                            contentFile,
+                            gitFile,
+                            AppConfig.myServentInfo.getChordId(),
+                            AppConfig.myServentInfo.getChordId()-1
+                    );
+                    MessageUtil.sendMessage(cloneFileMessage);
+
+                    CloneFileMessage cloneFileMessage1 = new CloneFileMessage(
+                            AppConfig.myServentInfo.getListenerPort(),
+                            AppConfig.chordState.getNextNodeForKey(AppConfig.myServentInfo.getChordId()+1).getListenerPort(),
+                            f.getName(),
+                            contentFile,
+                            gitFile,
+                            AppConfig.myServentInfo.getChordId(),
+                            AppConfig.myServentInfo.getChordId()+1
+                    );
+                    MessageUtil.sendMessage(cloneFileMessage1);
+                    //--------------------
 
                 }catch (Exception e){
                     AppConfig.timestampedErrorPrint("Doslo je do greske: ");

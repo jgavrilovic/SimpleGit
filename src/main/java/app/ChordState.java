@@ -241,9 +241,9 @@ public class ChordState {
 	}
 
 	/**brise node i updatetuje tabelu*/
-	public void removeNodes(ServentInfo newNodes) {
+	public void removeNodes(int id) {
 
-		allNodeInfo.removeIf(info -> info.getChordId() == newNodes.getChordId());
+		allNodeInfo.removeIf(info -> info.getChordId() == id);
 
 
 

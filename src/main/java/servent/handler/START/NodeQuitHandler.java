@@ -42,16 +42,16 @@ public class NodeQuitHandler implements MessageHandler {
                     int port = Integer.parseInt(msgTxt.split(" ")[0]);
                     int id =  Integer.parseInt(msgTxt.split(" ")[1]);
                     int pred  = Integer.parseInt(msgTxt.split(" ")[2]);
-                    ServentInfo info = new ServentInfo("localhost", port);
+
                     ServentInfo infoPred = new ServentInfo("localhost", pred);
 
                     //prvi sam koji je dobio poruku
                     if(AppConfig.chordState.getPredecessor().getChordId()==id){
                         AppConfig.chordState.getValueMap().putAll(clientMessage.getValueMap());
-                        AppConfig.chordState.removeNodes(info);
+                        AppConfig.chordState.removeNodes(id);
                         AppConfig.chordState.setPredecessor(infoPred);
                     }else{
-                        AppConfig.chordState.removeNodes(info);
+                        AppConfig.chordState.removeNodes(id);
                     }
 
 
