@@ -51,13 +51,15 @@ public class ConflictMessage extends BasicMessage {
 
     @Override
     public String toString() {
-        return "ConflictMessage{" +
-                "conflictType=" + conflictType +
-                ", senderID=" + senderID +
-                ", target=" + target +
-                ", name='" + name + '\'' +
-                ", content='" + content + '\'' +
-                ", version=" + version +
-                '}';
+        return "ConflictMessage: "
+                + super.getSenderPort()
+                + " | " + super.getReceiverPort()
+                + " | " + super.getMessageId()
+                + " | " + name
+                + " | " + content
+                + " | " + version
+                + " | " + conflictType
+                + " | " + senderID
+                + " | " + target;
     }
 }

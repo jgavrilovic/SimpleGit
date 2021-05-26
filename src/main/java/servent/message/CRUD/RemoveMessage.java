@@ -13,9 +13,15 @@ public class RemoveMessage extends BasicMessage {
 
     public RemoveMessage(int senderPort, int receiverPort, String messageText, int senderID, int target) {
         super(MessageType.DELETE, senderPort, receiverPort,messageText);
-
         this.senderID=senderID;
         this.target=target;
+    }
+
+    @Override
+    public String toString() {
+        return "TellPullMessage: "
+                + super.getSenderPort() + " | " + super.getReceiverPort() + " | " + super.getMessageId() + " | " + super.getMessageText()
+                + " | " + senderID + " | " + target;
     }
 
 }

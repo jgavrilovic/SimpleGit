@@ -5,8 +5,7 @@ import lombok.Getter;
 import servent.message.BasicMessage;
 import servent.message.MessageType;
 
-import java.util.ArrayList;
-import java.util.Set;
+
 
 @Getter
 public class MessageInfoTeam extends BasicMessage {
@@ -22,6 +21,11 @@ public class MessageInfoTeam extends BasicMessage {
         this.gitFile=gitFile;
         this.target=target;
         this.idKodKogaJe=idKodKogaJe;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageInfoTeam: " + super.getSenderPort()+" | "+super.getReceiverPort()+" | "+super.getMessageId()+" | "+gitFile+" | "+ idKodKogaJe+" | "+ target;
     }
 
 }

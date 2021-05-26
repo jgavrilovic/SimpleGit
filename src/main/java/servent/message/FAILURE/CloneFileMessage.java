@@ -15,23 +15,19 @@ public class CloneFileMessage extends BasicMessage {
     private int sender;
     private int target;
 
-    public CloneFileMessage(int senderPort, int receiverPort, String nameOfFile, String contentOfFile,GitFile gitFile, int sender, int target) {
+    public CloneFileMessage(int senderPort, int receiverPort, String nameOfFile, String contentOfFile, GitFile gitFile, int sender, int target) {
         super(MessageType.CLONE_GITFILE, senderPort, receiverPort);
-        this.nameOfFile=nameOfFile;
-        this.contentOfFile=contentOfFile;
-        this.gitFile=gitFile;
-        this.sender=sender;
-        this.target=target;
+        this.nameOfFile = nameOfFile;
+        this.contentOfFile = contentOfFile;
+        this.gitFile = gitFile;
+        this.sender = sender;
+        this.target = target;
     }
 
     @Override
     public String toString() {
-        return "CloneFileMessage{" +
-                "nameOfFile='" + nameOfFile + '\'' +
-                ", contentOfFile='" + contentOfFile + '\'' +
-                ", gitFile=" + gitFile +
-                ", sender=" + sender +
-                ", target=" + target +
-                '}';
+        return "CloneFileMessage: "
+                + super.getSenderPort() + " | " + super.getReceiverPort() + " | " + super.getMessageId() + " | " + nameOfFile
+                + " | " + contentOfFile + " | " + gitFile + " | " + target;
     }
 }

@@ -103,9 +103,11 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					case PONG:
 						messageHandler = new PongHandler(clientMessage);
 						break;
-
 					case CLONE_GITFILE:
 						messageHandler = new CloneFileHandler(clientMessage);
+						break;
+					case REMOVE_NODE:
+						messageHandler = new RemoveNodeHandler(clientMessage);
 						break;
 				//---------------------------
 

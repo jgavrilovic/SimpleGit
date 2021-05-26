@@ -12,5 +12,9 @@ public class PongMessage extends BasicMessage {
         super(MessageType.PONG, senderPort, receiverPort,text);
     }
 
+    @Override
+    public String toString() {
+        return "PongMessage: " + super.getSenderPort()+" | "+super.getReceiverPort()+" | "+super.getMessageId()+" | "+super.getMessageText();
+    }
 }
 

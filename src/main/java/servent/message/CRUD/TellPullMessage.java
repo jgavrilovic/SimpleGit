@@ -22,4 +22,11 @@ public class TellPullMessage  extends BasicMessage {
         this.version=version;
     }
 
+    @Override
+    public String toString() {
+        return "TellPullMessage: "
+                + super.getSenderPort() + " | " + super.getReceiverPort() + " | " + super.getMessageId() + " | " + nameOfFile
+                + " | " + contentOfFile + " | " + version;
+    }
+
 }

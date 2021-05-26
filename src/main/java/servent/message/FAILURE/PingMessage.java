@@ -12,6 +12,10 @@ public class PingMessage extends BasicMessage {
         super(MessageType.PING, senderPort, receiverPort,text);
 
     }
+    @Override
+    public String toString() {
+        return "PingMessage: "+ super.getSenderPort()+" | "+super.getReceiverPort()+" | "+super.getMessageId()+" | "+super.getMessageText();
+    }
 
 
 

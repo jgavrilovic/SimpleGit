@@ -22,7 +22,7 @@ public class TeamHandler implements MessageHandler {
     @Override
     public void run() {
         if (clientMessage.getMessageType() == MessageType.TEAM_UPDATE) {
-            int sender = ((TeamMessage)clientMessage).getOriginalSender();
+            int sender = ((TeamMessage)clientMessage).getTarget();
             if (AppConfig.myServentInfo.getChordId()==sender) {
 
                 LocalTeam.teams= ((TeamMessage) clientMessage).getTeams();
@@ -47,7 +47,7 @@ public class TeamHandler implements MessageHandler {
                             AppConfig.chordState.getNextNodePort(),
                             ((TeamMessage) clientMessage).getTeamID(),
                             ((TeamMessage) clientMessage).getTeamLetter(),
-                            ((TeamMessage) clientMessage).getOriginalSender(),
+                            ((TeamMessage) clientMessage).getTarget(),
                             LocalTeam.teams
                     );
                     MessageUtil.sendMessage(teamMessage);

@@ -14,23 +14,18 @@ public class TeamMessage extends BasicMessage {
 
     private int teamID;
     private String teamLetter;
-    private int originalSender;
+    private int target;
     private ConcurrentHashMap<String, Set<Integer>> teams;
-    public TeamMessage(int senderPort, int receiverPort,int teamID,String teamLetter,int originalSender, ConcurrentHashMap<String, Set<Integer>> teams) {
+    public TeamMessage(int senderPort, int receiverPort, int teamID, String teamLetter, int target, ConcurrentHashMap<String, Set<Integer>> teams) {
         super(MessageType.TEAM_UPDATE, senderPort, receiverPort);
         this.teamID=teamID;
         this.teamLetter=teamLetter;
-        this.originalSender=originalSender;
+        this.target = target;
         this.teams= teams;
     }
 
     @Override
     public String toString() {
-        return "TeamMessage{" +
-                "teamID=" + teamID +
-                ", teamLetter='" + teamLetter + '\'' +
-                ", originalSender=" + originalSender +
-                ", teams=" + teams +
-                '}';
+        return "TeamMessage: " + super.getSenderPort()+" | "+super.getReceiverPort()+" | "+super.getMessageId()+" | "+teamLetter+" | "+ teams+" | "+target;
     }
 }

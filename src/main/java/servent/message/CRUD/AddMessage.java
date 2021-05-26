@@ -27,11 +27,12 @@ public class AddMessage extends BasicMessage {
 
     @Override
     public String toString() {
-        return "AddMessage{" +
-                "sender=" + sender +
-                ", target=" + target +
-                ", nameOfFile='" + nameOfFile + '\'' +
-                ", contentOfFile='" + contentOfFile + '\'' +
-                '}';
+        return "AskPullMessage: "
+                + super.getSenderPort()
+                + " | " + super.getReceiverPort()
+                + " | " + super.getMessageId()
+                + " | " + nameOfFile
+                + " | " + contentOfFile
+                + " | " + target;
     }
 }

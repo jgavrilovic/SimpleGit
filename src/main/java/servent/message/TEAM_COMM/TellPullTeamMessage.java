@@ -20,4 +20,9 @@ public class TellPullTeamMessage extends BasicMessage {
         this.version=version;
     }
 
+    @Override
+    public String toString() {
+        return "TellPullTeamMessage: " + super.getSenderPort()+" | "+super.getReceiverPort()+" | "+super.getMessageId()+" | "+nameOfFile+" | "+ contentOfFile+" | "+ version;
+    }
+
 }

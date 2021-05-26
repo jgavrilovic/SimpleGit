@@ -27,12 +27,14 @@ public class CommitMessage extends BasicMessage {
 
     @Override
     public String toString() {
-        return "CommitMessage{" +
-                "senderID=" + senderID +
-                ", target=" + target +
-                ", nameOfFile='" + nameOfFile + '\'' +
-                ", contentOfFile='" + contentOfFile + '\'' +
-                ", version=" + version +
-                '}';
+        return "CommitMessage: "
+                + super.getSenderPort()
+                + " | " + super.getReceiverPort()
+                + " | " + super.getMessageId()
+                + " | " + nameOfFile
+                + " | " + contentOfFile
+                + " | " + version
+                + " | " + senderID
+                + " | " + target;
     }
 }
