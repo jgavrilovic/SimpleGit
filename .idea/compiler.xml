@@ -7,7 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="kids_projekat_Jovan_Gavrilovic_rn8116" />
+        <module name="SimpleGit" />
       </profile>
     </annotationProcessing>
   </component>
